@@ -36,7 +36,7 @@ class HomeViewController: UIViewController {
                 
                 let userType = values?["userType"] as! String
                 
-                if userType == "customer" {
+                /*if userType == "customer" {
                     
                     let customerHasReservation = values?["customerHasReservation"] as! Bool
                     let customerIsSeated = values?["customerIsSeated"] as! Bool
@@ -66,7 +66,7 @@ class HomeViewController: UIViewController {
                         
                         self.present(navController, animated: true, completion: nil)
                     }
-                }else if userType == "host" {
+                }else*/ if userType == "host" {
                     
                     let hostController = HostSeatingController()
                     

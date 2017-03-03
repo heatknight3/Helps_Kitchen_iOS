@@ -19,7 +19,6 @@ class LoginViewController: UIViewController {
     ////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    let neutralColor = UIColor(displayP3Red: 232, green: 232, blue: 230, alpha: 1)
     
     let inputsContainerView: UIView = {
         let view = UIView()

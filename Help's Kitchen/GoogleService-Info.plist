@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>225846378964-d5v7gr3ve72ve218ue5a69kudsjtfnvq.apps.googleusercontent.com</string>
+	<string>92078539964-lls27s259l1p7ms6l04s88mj30c1e3uv.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.225846378964-d5v7gr3ve72ve218ue5a69kudsjtfnvq</string>
+	<string>com.googleusercontent.apps.92078539964-lls27s259l1p7ms6l04s88mj30c1e3uv</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDJPDdWUZKGj_CLouFn3goNBRxYoI0ihIw</string>
+	<string>AIzaSyAHgtkcprPieSyP3ohYsdKXSB9WtuaRRI4</string>
 	<key>GCM_SENDER_ID</key>
-	<string>225846378964</string>
+	<string>92078539964</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>Stephen-Ulmer.Help-s-Kitchen</string>
 	<key>PROJECT_ID</key>
-	<string>helps-kitchen</string>
+	<string>test-c1f82</string>
 	<key>STORAGE_BUCKET</key>
-	<string>helps-kitchen.appspot.com</string>
+	<string>test-c1f82.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true/>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:225846378964:ios:f3ad519bcd5fecb4</string>
+	<string>1:92078539964:ios:f3ad519bcd5fecb4</string>
 	<key>DATABASE_URL</key>
-	<string>https://helps-kitchen.firebaseio.com</string>
+	<string>https://test-c1f82.firebaseio.com</string>
 </dict>
 </plist>

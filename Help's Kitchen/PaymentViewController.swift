@@ -11,7 +11,7 @@ import Firebase
 
 class PaymentViewController: UIViewController {
     
-    let ref = FIRDatabase.database().reference(fromURL: "https://helps-kitchen.firebaseio.com/")
+    let ref = FIRDatabase.database().reference(fromURL: DataAccess.URL)
     
     let tempButton: UIButton = {
         let tb = UIButton()

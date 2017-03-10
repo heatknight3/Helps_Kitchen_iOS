@@ -11,7 +11,7 @@ import Firebase
 
 class HostSeatingController: CustomTableViewController {
     
-    let ref = FIRDatabase.database().reference(fromURL: "https://helps-kitchen.firebaseio.com/")
+    let ref = FIRDatabase.database().reference(fromURL: DataAccess.URL)
     
     struct TableStatus {
         
@@ -33,6 +33,7 @@ class HostSeatingController: CustomTableViewController {
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(handleNewReservation))
     }
     
     func handleLogout() {
@@ -42,6 +43,16 @@ class HostSeatingController: CustomTableViewController {
             print(logoutError)
         }
         dismiss(animated: true, completion: nil)
+        
+    }
+    
+    func handleNewReservation() {
+        
+        let newResController = NewReservationController()
+        
+        let navController = CustomNavigationController(rootViewController: newResController)
+        
+        present(navController, animated: true, completion: nil)
         
     }
     
@@ -57,7 +68,7 @@ class HostSeatingController: CustomTableViewController {
     }
     
     func fetchTables() {
-        ref.child("tables").observeSingleEvent(of: .value , with: { (snapshot) in
+        ref.child("Tables").observeSingleEvent(of: .value , with: { (snapshot) in
             print(snapshot)
             
             for eachTable in snapshot.children {
@@ -67,9 +78,9 @@ class HostSeatingController: CustomTableViewController {
                 if let dict = (eachTable as! FIRDataSnapshot).value as? [String : AnyObject] {
                     
                     
-                    table.name = dict["tableName"] as! String?
+                    table.name = dict["name"] as! String?
                     table.key = (eachTable as!FIRDataSnapshot).key
-                    table.status = dict["tableStatus"] as! String?
+                    table.status = dict["status"] as! String?
                     
                     if(table.status == "available"){
                         self.tableArray[0].tables.append(table)

@@ -8,13 +8,9 @@
 
 import Foundation
 
-class User: NSObject{
+class Reservation: NSObject{
     
     var name: String?
-    var uid: String?
-    var email: String?
-    var type: String?
-    var hasPaid: Bool?
-    var hasReservation: Bool?
-    var isSeated: Bool?
+    var partySize: Int?
+    var key: String?
 }

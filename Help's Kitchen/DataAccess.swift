@@ -7,3 +7,12 @@
 //
 
 import Foundation
+
+class DataAccess {
+    
+    class var URL: String {
+        get{
+            return "https://test-c1f82.firebaseio.com/"
+        }
+    }
+}

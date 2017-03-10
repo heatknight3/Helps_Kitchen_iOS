@@ -12,7 +12,7 @@ import Firebase
 class ReservationViewController: UIViewController {
     
     
-    let ref = FIRDatabase.database().reference(fromURL: "https://helps-kitchen.firebaseio.com/")
+    let ref = FIRDatabase.database().reference(fromURL: DataAccess.URL)
     
     let dateTimePicker: UIDatePicker = {
         let picker = UIDatePicker()

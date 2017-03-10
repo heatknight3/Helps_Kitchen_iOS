@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 
 class HomeViewController: UIViewController {
-    let ref = FIRDatabase.database().reference(fromURL: "https://helps-kitchen.firebaseio.com/")
+    let ref = FIRDatabase.database().reference(fromURL: DataAccess.URL)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,7 +19,6 @@ class HomeViewController: UIViewController {
     }
         
     override func viewDidAppear(_ animated: Bool){
-            
         checkStatus()
         
     }
@@ -31,10 +30,10 @@ class HomeViewController: UIViewController {
         if uid == nil {
             handleLogout()
         }else{
-            ref.child("users").child(uid!).observeSingleEvent(of: .value, with: { (snapshot) in
+            ref.child("Users").child(uid!).observeSingleEvent(of: .value, with: { (snapshot) in
                 let values = snapshot.value as? [String : AnyObject]
                 
-                let userType = values?["userType"] as! String
+                let userType = values?["type"] as! String
                 
                 /*if userType == "customer" {
                     
@@ -66,14 +65,14 @@ class HomeViewController: UIViewController {
                         
                         self.present(navController, animated: true, completion: nil)
                     }
-                }else*/ if userType == "host" {
+                }else*/ if userType == "Host" {
                     
                     let hostController = HostSeatingController()
                     
                     let navController = CustomNavigationController(rootViewController: hostController)
                     
                     self.present(navController, animated: true, completion: nil)
-                }else if userType == "server" {
+                }else if userType == "Server" {
                     let serverController = ServerTableController()
                     
                     let navController = CustomNavigationController(rootViewController: serverController)

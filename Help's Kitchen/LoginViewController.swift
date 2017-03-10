@@ -11,7 +11,7 @@ import Firebase
 
 class LoginViewController: UIViewController {
     
-    let ref = FIRDatabase.database().reference(fromURL: "https://helps-kitchen.firebaseio.com/")
+    let ref = FIRDatabase.database().reference(fromURL: DataAccess.URL)
     
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////
@@ -72,7 +72,7 @@ class LoginViewController: UIViewController {
                 FIRDatabase.database().reference().child("users").child(uid).child("userType").observeSingleEvent(of: .value, with: { (snapshot) in
                     
                     
-                    let userType = snapshot.value as! String
+                    let userType = snapshot.v\lue as! String
                     
                     if userType == "customer" {
                         self.home?.present(ReservationViewController(), animated: true, completion: nil)

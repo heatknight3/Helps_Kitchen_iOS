@@ -11,12 +11,12 @@ import Firebase
 
 class AssignToTableController: CustomTableViewController {
     
-    let ref = FIRDatabase.database().reference(fromURL: "https://helps-kitchen.firebaseio.com/")
+    let ref = FIRDatabase.database().reference(fromURL: DataAccess.URL)
     
     var selectedTable: Table?
     
-    var seatingQueueIds = [String]()
-    var seatingQueueUsers = [User]()
+    var reservationIds = [String]()
+    var reservations = [Reservation]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,29 +35,29 @@ class AssignToTableController: CustomTableViewController {
     
     func fetchSeatingQueue() {
         
-        ref.child("misc").child("seatingQueue").observe(.value, with: { (snapshot) in
+        ref.child("ReservationQueue").observe(.value, with: { (snapshot) in
             print(snapshot)
-            self.seatingQueueIds = ((snapshot.value) as! [String])
+            self.reservationIds = ((snapshot.value) as! [String])
             
             
         })
         ref.child("users").observeSingleEvent(of: .value, with: { (snapshot) in
             
-            for eachUser in snapshot.children {
+            for eachRes in snapshot.children {
                 
-                let thisUser = eachUser as! FIRDataSnapshot
+                let thisRes = eachRes as! FIRDataSnapshot
                 
-                
-                if (self.seatingQueueIds.contains(thisUser.key)){
+                if (self.reservationIds.contains(thisRes.key)){
                     
-                    if let dict = (eachUser as! FIRDataSnapshot).value as? [String: AnyObject] {
+                    if let dict = thisRes.value as? [String: AnyObject] {
                         
-                        let tempUser = User()
+                        let tempReservation = Reservation()
                         
-                        tempUser.name = dict["name"] as? String
-                        tempUser.uid = (eachUser as! FIRDataSnapshot).key
+                        tempReservation.name = dict["name"] as? String
+                        tempReservation.partySize = dict["partySize"] as? Int
+                        tempReservation.key = thisRes.key
                         
-                        self.seatingQueueUsers.append(tempUser)
+                        self.reservations.append(tempReservation)
                     }
                 }
             }
@@ -65,7 +65,6 @@ class AssignToTableController: CustomTableViewController {
                 self.tableView.reloadData()
             }
         })
-        
         
     }
     
@@ -75,13 +74,13 @@ class AssignToTableController: CustomTableViewController {
     
     //TODO: Add overrides for num section, etc.
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return seatingQueueUsers.count
+        return reservations.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
-        cell.textLabel?.text = seatingQueueUsers[indexPath.row].name
+        cell.textLabel?.text = reservations[indexPath.row].name
         cell.textLabel?.textColor = CustomColor.amber500
         cell.backgroundColor = UIColor.black
         return cell
@@ -89,22 +88,22 @@ class AssignToTableController: CustomTableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        //remove from seatingQueue
-        removeUserFromQueue(index: indexPath.row)
         //add to table
-        ref.child("tables").child((selectedTable?.key)!).child("user").setValue(seatingQueueUsers[indexPath.row].uid)
-        ref.child("users").child(seatingQueueUsers[indexPath.row].uid!).child("customerIsSeated").setValue(true)
+        ref.child("Tables").child((selectedTable?.key)!).child("reservationName").setValue(reservations[indexPath.row].name)
         
         //change table status
-        ref.child("tables").child((selectedTable?.key)!).child("tableStatus").setValue("seated")
+        ref.child("Tables").child((selectedTable?.key)!).child("tableStatus").setValue("seated")
+        
+        //remove from seatingQueue
+        removeUserFromQueue(index: indexPath.row)
     }
     
     func removeUserFromQueue(index: Int){
         
         var tempQueue = [String]()
         
-        for user in seatingQueueUsers {
-            tempQueue.append(user.uid!)
+        for res in reservations {
+            tempQueue.append(res.key!)
         }
         
         if tempQueue.count == 1 {
@@ -113,9 +112,9 @@ class AssignToTableController: CustomTableViewController {
             tempQueue.remove(at: index)
         }
         
-        ref.child("misc").child("seatingQueue").setValue(tempQueue)
+        ref.child("ReservationQueue").setValue(tempQueue)
+        
         dismiss(animated: true, completion: nil)
     }
-    
     
 }

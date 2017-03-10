@@ -11,7 +11,7 @@ import Firebase
 
 class AddItemsViewController: UITableViewController {
     
-    let ref = FIRDatabase.database().reference(fromURL: "https://helps-kitchen.firebaseio.com/")
+    let ref = FIRDatabase.database().reference(fromURL: DataAccess.URL)
 
     override func viewDidLoad() {
         super.viewDidLoad()

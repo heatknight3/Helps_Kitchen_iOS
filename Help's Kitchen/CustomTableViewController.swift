@@ -21,4 +21,16 @@ class CustomTableViewController: UITableViewController {
         tableView.separatorColor = CustomColor.amber500
     }
     
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.alpha = 0
+        
+        let rotationTransform = CATransform3DTranslate(CATransform3DIdentity, 500, 10, 0)
+        cell.layer.transform = rotationTransform
+        
+        UIView.animate(withDuration: 1.0){
+            cell.alpha = 1
+            cell.layer.transform = CATransform3DIdentity
+        }
+        
+    }
 }

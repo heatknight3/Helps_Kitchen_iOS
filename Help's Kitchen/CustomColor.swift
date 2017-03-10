@@ -75,5 +75,11 @@ class CustomColor: UIColor {
             return UIColor(red: 245/255, green: 127/255, blue: 23/255, alpha: 1)
         }
     }
+    
+    class var UCFGold: UIColor {
+        get{
+            return UIColor(red: 255/255, green: 207/255, blue: 6/255, alpha: 1)
+        }
+    }
 
 }

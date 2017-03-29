@@ -134,5 +134,7 @@ class HostSeatingController: CustomTableViewController {
          ref.child("misc").child("seatingQueue")
         present(navController, animated: true, completion: nil)
     }
+    
+
 
 }

@@ -22,8 +22,22 @@ class CustomTableViewController: UITableViewController {
         tableView.backgroundColor = CustomColor.black
     }
     
+<<<<<<< HEAD
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         view.tintColor = CustomColor.Yellow500
         (view as! UITableViewHeaderFooterView).textLabel?.textColor = UIColor.black
+=======
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.alpha = 0
+        
+        let rotationTransform = CATransform3DTranslate(CATransform3DIdentity, 500, 10, 0)
+        cell.layer.transform = rotationTransform
+        
+        UIView.animate(withDuration: 0.25){
+            cell.alpha = 1
+            cell.layer.transform = CATransform3DIdentity
+        }
+        
+>>>>>>> 9d82b637edc91dcc339fe36441cac6be924a1208
     }
 }

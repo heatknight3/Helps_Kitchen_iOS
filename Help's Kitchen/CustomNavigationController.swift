@@ -13,7 +13,7 @@ class CustomNavigationController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationBar.barTintColor = UIColor.black
-        navigationBar.tintColor = CustomColor.amber500
+        navigationBar.tintColor = CustomColor.Yellow500
         navigationBar.isTranslucent = false
         
     }

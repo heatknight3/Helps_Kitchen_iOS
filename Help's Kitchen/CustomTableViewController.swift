@@ -18,7 +18,12 @@ class CustomTableViewController: UITableViewController {
     
     func setupDesign() {
         view.backgroundColor = UIColor.black
-        tableView.separatorColor = CustomColor.amber500
+        tableView.separatorColor = CustomColor.Yellow500
+        tableView.backgroundColor = CustomColor.black
     }
     
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        view.tintColor = CustomColor.Yellow500
+        (view as! UITableViewHeaderFooterView).textLabel?.textColor = UIColor.black
+    }
 }

@@ -54,8 +54,7 @@ class AssignToTableController: CustomTableViewController {
                         let tempReservation = Reservation()
                         
                         tempReservation.name = dict["name"] as? String
-                        tempReservation.partySize = dict["partySize"] as? Int
-                        tempReservation.key = thisRes.key
+                        tempReservation.partySize = dict["partySize"] as! NSNumber?
                         
                         self.reservations.append(tempReservation)
                     }
@@ -103,7 +102,7 @@ class AssignToTableController: CustomTableViewController {
         var tempQueue = [String]()
         
         for res in reservations {
-            tempQueue.append(res.key!)
+            tempQueue.append(res.name!)
         }
         
         if tempQueue.count == 1 {

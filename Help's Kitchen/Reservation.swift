@@ -10,7 +10,7 @@ import Foundation
 
 class Reservation: NSObject{
     
+    var partySize: NSNumber?
     var name: String?
-    var partySize: Int?
-    var key: String?
+    var dateTime: String?
 }

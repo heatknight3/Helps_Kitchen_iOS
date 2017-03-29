@@ -47,6 +47,14 @@ class NewReservationController: UIViewController, UIPickerViewDelegate, UIPicker
         return tf
     }()
     
+    let errorLabel: UILabel = {
+        let el = UILabel()
+        el.textColor = UIColor.red
+        
+        
+        return el
+    }()
+    
     func dateTimeChanged() {
         print(dateTimePicker.date)
     }
@@ -57,6 +65,8 @@ class NewReservationController: UIViewController, UIPickerViewDelegate, UIPicker
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: .plain, target: self, action: #selector(handleCreate))
+        
+        navigationItem.title = "Reservation"
         
         view.backgroundColor = UIColor.black
         
@@ -75,20 +85,42 @@ class NewReservationController: UIViewController, UIPickerViewDelegate, UIPicker
     }
     
     func handleCreate() {
+        
+        var currentReservations: [String]?
     
         ref.child("ReservationQueue").observeSingleEvent(of: .value, with: {snapshot in
             
-            var currentReservations = snapshot.value as! [String]
+            var nameIsNotTaken = true
             
-            if currentReservations[0] == "" {
-                currentReservations[0] = self.nameTextField.text!
-            } else {
-                currentReservations.append(self.nameTextField.text!)
+            currentReservations = snapshot.value as? [String]
+            
+            for res in currentReservations! {
+                print(res.lowercased())
+                print((self.nameTextField.text?.lowercased())!)
+                
+                if res.lowercased() == (self.nameTextField.text?.lowercased())! {
+                    self.nameTextField.shake()
+                    self.errorLabel.text = "Reservation name taken."
+                    nameIsNotTaken = false
+                }
             }
             
-            self.ref.child("ReservationQueue").setValue(currentReservations as NSArray)
+            if nameIsNotTaken {
+            
+                if currentReservations?[0] == "" {
+                currentReservations?[0] = self.nameTextField.text!
+                } else {
+                currentReservations?.append(self.nameTextField.text!)
+                }
+            
+                self.ref.child("ReservationQueue").setValue(currentReservations)
+                
+                self.dismiss(animated: true, completion: nil)
+            }
         })
-        dismiss(animated: true, completion: nil)
+        
+        
+        
     }
     
     func setupDateTimePicker() {
@@ -144,4 +176,15 @@ class NewReservationController: UIViewController, UIPickerViewDelegate, UIPicker
         return 20
     }
 
+}
+
+//Lucas's sexy ass animation (oh yas bby - Stephen)
+extension UIView {
+    func shake() {
+        let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
+        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+        animation.duration = 0.6
+        animation.values = [-20.0, 20.0, -20.0, 20.0, -10.0, 10.0, -5.0, 5.0, 0.0 ]
+        layer.add(animation, forKey: "shake")
+    }
 }

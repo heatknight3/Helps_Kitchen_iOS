@@ -32,10 +32,10 @@ class HostSeatingController: CustomTableViewController {
         fetchTables()
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
-        navigationItem.leftBarButtonItem?.tintColor = CustomColor.UCFGold
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(handleNewReservation))
-        navigationItem.rightBarButtonItem?.tintColor = CustomColor.UCFGold
+        
+        
     }
     
     func handleLogout() {
@@ -118,12 +118,11 @@ class HostSeatingController: CustomTableViewController {
         return tableArray[section].tables.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> CustomTableCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableCell
         
         cell.textLabel?.text = tableArray[indexPath.section].tables[indexPath.row].name
-        cell.textLabel?.textColor = CustomColor.UCFGold
-        cell.backgroundColor = UIColor.black
+        cell.setColors()
         return cell
     }
     

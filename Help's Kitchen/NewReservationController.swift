@@ -19,6 +19,8 @@ class NewReservationController: UIViewController, UIPickerViewDelegate, UIPicker
         }
     }
     
+    var pickedPartySize: Int? = 1
+    
     let dateTimePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.translatesAutoresizingMaskIntoConstraints = false
@@ -56,7 +58,7 @@ class NewReservationController: UIViewController, UIPickerViewDelegate, UIPicker
     }()
     
     func dateTimeChanged() {
-        print(dateTimePicker.date)
+        print(dateTimePicker.date.)
     }
 
     override func viewDidLoad() {
@@ -115,6 +117,20 @@ class NewReservationController: UIViewController, UIPickerViewDelegate, UIPicker
             
                 self.ref.child("ReservationQueue").setValue(currentReservations)
                 
+                let dateTime = self.dateTimePicker.date.description
+                
+                let partySize = self.pickedPartySize!
+                
+                self.ref.child("Reservations").child(self.nameTextField.text!).updateChildValues(["dateTime": dateTime, "partySize": partySize, "name":self.nameTextField.text!],withCompletionBlock: {(err, ref) in
+                    
+                    if err != nil {
+                        print(err!)
+                        return
+                    }
+                    
+                    print("Saved user successfully")
+                })
+                
                 self.dismiss(animated: true, completion: nil)
             }
         })
@@ -167,6 +183,10 @@ class NewReservationController: UIViewController, UIPickerViewDelegate, UIPicker
         let rowString = NSAttributedString(string: String(partySizeArray[row]), attributes: [NSForegroundColorAttributeName : CustomColor.Yellow500])
         
         return rowString
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        pickedPartySize = partySizeArray[row]
     }
     
     func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {

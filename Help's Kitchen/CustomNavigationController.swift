@@ -19,5 +19,9 @@ class CustomNavigationController: UINavigationController {
         let titleDict = [NSForegroundColorAttributeName: CustomColor.Yellow500]
         navigationBar.titleTextAttributes = titleDict
     }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 
 }

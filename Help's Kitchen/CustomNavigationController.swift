@@ -12,10 +12,12 @@ class CustomNavigationController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationBar.barTintColor = UIColor.black
+        navigationBar.barTintColor = CustomColor.Grey900
         navigationBar.tintColor = CustomColor.Yellow500
         navigationBar.isTranslucent = false
         
+        let titleDict = [NSForegroundColorAttributeName: CustomColor.Yellow500]
+        navigationBar.titleTextAttributes = titleDict
     }
 
 }

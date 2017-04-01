@@ -66,20 +66,6 @@ class LoginViewController: UIViewController {
                 return
             }
             
-            /*guard let uid = FIRAuth.auth()?.currentUser?.uid else {
-                return
-            }
-            
-                FIRDatabase.database().reference().child("users").child(uid).child("userType").observeSingleEvent(of: .value, with: { (snapshot) in
-                    
-                    
-                    let userType = snapshot.v\lue as! String
-                    
-                    if userType == "customer" {
-                        self.home?.present(ReservationViewController(), animated: true, completion: nil)
-                    }
-                })*/
-            
             self.dismiss(animated: true, completion: nil)
         })
     }
@@ -293,5 +279,4 @@ class LoginViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-    
 }

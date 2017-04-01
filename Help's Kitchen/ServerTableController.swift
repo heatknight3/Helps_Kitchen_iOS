@@ -68,7 +68,6 @@ class ServerTableController: CustomTableViewController {
                 
                 if let dict = (eachTable as! FIRDataSnapshot).value as? [String : AnyObject] {
                     
-                    
                     table.name = dict["tableName"] as! String?
                     table.key = (eachTable as!FIRDataSnapshot).key
                     table.status = dict["tableStatus"] as! String?

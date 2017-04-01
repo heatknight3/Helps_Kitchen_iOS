@@ -64,7 +64,6 @@ class AssignToTableController: CustomTableViewController {
                 self.tableView.reloadData()
             }
         })
-        
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {

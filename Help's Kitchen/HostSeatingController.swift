@@ -23,7 +23,6 @@ class HostSeatingController: CustomTableViewController {
     
     var tableArray = [TableStatus]()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -42,7 +41,6 @@ class HostSeatingController: CustomTableViewController {
             print(logoutError)
         }
         dismiss(animated: true, completion: nil)
-        
     }
     
     func handleNewReservation() {
@@ -52,7 +50,6 @@ class HostSeatingController: CustomTableViewController {
         let navController = CustomNavigationController(rootViewController: newResController)
         
         present(navController, animated: true, completion: nil)
-        
     }
     
     func initTableStructs() {
@@ -70,15 +67,9 @@ class HostSeatingController: CustomTableViewController {
     
     func fetchTables() {
         
-        
-        
-        
         ref.child("Tables").observe(.value, with: { (snapshot) in
             
             self.initTableStructs()
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
             
             print(snapshot)
             
@@ -91,6 +82,8 @@ class HostSeatingController: CustomTableViewController {
                     table.name = dict["name"] as! String?
                     table.key = (eachTable as!FIRDataSnapshot).key
                     table.status = dict["status"] as! String?
+                    table.capacity = dict["capacity"] as! Int?
+                    table.reservationName = dict["reservationName"] as! String?
             
                     if(table.status == "available"){
                         self.tableArray[0].tables.append(table)
@@ -103,8 +96,7 @@ class HostSeatingController: CustomTableViewController {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
-            
-            })
+        })
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -129,22 +121,23 @@ class HostSeatingController: CustomTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> CustomTableCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableCell
         
-        
         cell.textLabel?.text = tableArray[indexPath.section].tables[indexPath.row].name
         cell.setColors()
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let assignToTableController = AssignToTableController()
-        assignToTableController.selectedTable = tableArray[indexPath.section].tables[indexPath.row]
         
-        let navController = UINavigationController(rootViewController: assignToTableController)
-        ref.child("misc").child("seatingQueue")
-        present(navController, animated: true, completion: {
-        })
+        if indexPath[0] == 0 {
+            let assignToTableController = AssignToTableController()
+            assignToTableController.selectedTable = tableArray[indexPath.section].tables[indexPath.row]
+            let navController = CustomNavigationController(rootViewController: assignToTableController)
+            present(navController, animated: true, completion: nil)
+        } else if indexPath[0] == 1 {
+            let seatedController = SeatedTableViewController()
+            seatedController.selectedTable = tableArray[indexPath.section].tables[indexPath.row]
+            let navController = CustomNavigationController(rootViewController: seatedController)
+            present(navController, animated: true, completion: nil)
+        }
     }
-    
-
-
 }

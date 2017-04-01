@@ -58,7 +58,7 @@ class NewReservationController: UIViewController, UIPickerViewDelegate, UIPicker
     }()
     
     func dateTimeChanged() {
-        print(dateTimePicker.date.)
+        print(dateTimePicker.date)
     }
 
     override func viewDidLoad() {
@@ -79,7 +79,6 @@ class NewReservationController: UIViewController, UIPickerViewDelegate, UIPicker
         setupDateTimePicker()
         setupPartySizePicker()
         setupNameTextField()
-        
     }
     
     func handleCancel() {
@@ -134,9 +133,6 @@ class NewReservationController: UIViewController, UIPickerViewDelegate, UIPicker
                 self.dismiss(animated: true, completion: nil)
             }
         })
-        
-        
-        
     }
     
     func setupDateTimePicker() {

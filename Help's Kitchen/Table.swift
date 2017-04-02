@@ -15,5 +15,6 @@ class Table: NSObject{
     var status: String?
     var capacity: Int?
     var reservationName: String?
+    var newStatus: String?
     
 }

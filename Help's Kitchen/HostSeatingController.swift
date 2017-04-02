@@ -84,7 +84,8 @@ class HostSeatingController: CustomTableViewController {
                     table.status = dict["status"] as! String?
                     table.capacity = dict["capacity"] as! Int?
                     table.reservationName = dict["reservationName"] as! String?
-            
+                    table.newStatus = dict["newStatus"] as! String?
+                    
                     if(table.status == "available"){
                         self.tableArray[0].tables.append(table)
                     }else if table.status == "seated"{
@@ -123,7 +124,15 @@ class HostSeatingController: CustomTableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableCell
         
         cell.textLabel?.text = tableArray[indexPath.section].tables[indexPath.row].name
-        cell.setColors()
+        if (tableArray[indexPath.section].tables[indexPath.row].newStatus == "true")
+        {
+            cell.setGreen()
+        }
+        else
+        {
+            cell.setColors()
+        }
+    
         return cell
     }
     

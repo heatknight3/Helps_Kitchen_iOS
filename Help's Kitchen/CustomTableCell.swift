@@ -24,6 +24,28 @@ class CustomTableCell: UITableViewCell {
     func setColors() {
         self.textLabel?.textColor = CustomColor.Yellow500
         self.backgroundColor = UIColor.black
+        self.textLabel?.alpha = 1
+    }
+    
+    func setGreen() {
+        
+        
+        self.textLabel?.textColor = CustomColor.green
+        self.backgroundColor = UIColor.black
+        
+        self.textLabel?.alpha = 1
+        UIView.animate(withDuration: 0.7, delay: 0.0, options: [.repeat, .autoreverse, ], animations:
+            {
+                self.textLabel?.alpha = 0
+        }, completion: nil)
+    }
+    
+    func flashColor() {
+        let when = DispatchTime.now() + 2
+        DispatchQueue.main.asyncAfter(deadline: when){
+            self.textLabel?.textColor = CustomColor.green
+            self.backgroundColor = UIColor.black
+        }
     }
     
     func setupTableNameLabel() {
@@ -31,3 +53,5 @@ class CustomTableCell: UITableViewCell {
     }
 
 }
+
+

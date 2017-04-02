@@ -82,9 +82,33 @@ class CustomColor: UIColor {
         }
     }
     
+    class var UCFGoldTrans75: UIColor {
+        get{
+            return UIColor(red: 255/255, green: 207/255, blue: 6/255, alpha: 0.75)
+        }
+    }
+    
     class var Grey900: UIColor {
         get{
             return UIColor(red: 33/255, green: 33/255, blue: 33/255, alpha: 1)
+        }
+    }
+    
+    class var Grey850: UIColor {
+        get{
+            return UIColor(red: 48/255, green: 48/255, blue: 48/255, alpha: 1)
+        }
+    }
+    
+    class var Grey825: UIColor {
+        get{
+            return UIColor(red: 60/255, green: 60/255, blue: 60/255, alpha: 1)
+        }
+    }
+    
+    class var Grey800: UIColor {
+        get{
+            return UIColor(red: 66/255, green: 66/255, blue: 66/255, alpha: 1)
         }
     }
 

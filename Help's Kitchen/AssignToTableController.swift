@@ -90,6 +90,7 @@ class AssignToTableController: CustomTableViewController {
         
         //change table status
         ref.child("Tables").child((selectedTable?.key)!).child("status").setValue("seated")
+        ref.child("Tables").child((selectedTable?.key)!).child("newStatus").setValue("false")
         
         //remove from seatingQueue
         removeUserFromQueue(index: indexPath.row)

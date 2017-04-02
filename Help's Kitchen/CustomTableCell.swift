@@ -36,8 +36,15 @@ class CustomTableCell: UITableViewCell {
         self.textLabel?.alpha = 1
         UIView.animate(withDuration: 0.7, delay: 0.0, options: [.repeat, .autoreverse, ], animations:
             {
+                UIView.setAnimationRepeatCount(5)
                 self.textLabel?.alpha = 0
-        }, completion: nil)
+        }, completion: { (finished: Bool) in
+            self.textLabel?.textColor = CustomColor.UCFGold
+            self.textLabel?.alpha = 1
+        })
+        
+        
+        
     }
     
     func flashColor() {

@@ -127,6 +127,7 @@ class HostSeatingController: CustomTableViewController {
         if (tableArray[indexPath.section].tables[indexPath.row].newStatus == "true")
         {
             cell.setGreen()
+            
         }
         else
         {

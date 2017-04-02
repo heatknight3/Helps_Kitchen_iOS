@@ -45,7 +45,7 @@ class ServerOrderViewController: CustomTableViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    func initTableStructs() {
+    func initOrderStructs() {
         
         orderArray = [OrderStatus]()
         
@@ -68,7 +68,7 @@ class ServerOrderViewController: CustomTableViewController {
     
     func fetchOrders() {
         
-        initTableStructs()
+        initOrderStructs()
         
         ref.child("OrderList").observe(.value, with: { (snapshot) in
             
@@ -130,7 +130,6 @@ class ServerOrderViewController: CustomTableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableCell
         
         cell.textLabel?.text = orderArray[indexPath.section].orders[indexPath.row].item
-        cell.detailTextLabel?.text 
         cell.setColors()
         return cell
     }

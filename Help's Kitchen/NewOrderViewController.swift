@@ -8,12 +8,30 @@
 
 import UIKit
 
-class NewOrderViewController: CustomTableViewController {
+class NewOrderViewController: UITabBarController, UITabBarControllerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        self.delegate = self
+        
+        let newFoodController = NewFoodViewController()
+        
+        let tabOne = CustomNavigationController(rootViewController: newFoodController)
+        
+        let tabOneBarItem = UITabBarItem(title: "Food", image: nil, selectedImage: nil)
+        
+        tabOne.tabBarItem = tabOneBarItem
+        
+        let newDrinkController = NewDrinkViewController()
+        
+        let tabTwo = CustomNavigationController(rootViewController: newDrinkController)
+        
+        let tabTwoBarItem = UITabBarItem(title: "Drink", image: nil, selectedImage: nil)
+        
+        tabTwo.tabBarItem = tabTwoBarItem
+        
+        self.viewControllers = [tabOne, tabTwo]
     }
 
     

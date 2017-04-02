@@ -46,9 +46,7 @@ class TableInfoViewController: CustomTableViewController {
     func handleNewOrder() {
         let orderController = NewOrderViewController()
         
-        let navController = CustomNavigationController(rootViewController: orderController)
-        
-        present(navController, animated: true, completion: nil)
+        present(orderController, animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {

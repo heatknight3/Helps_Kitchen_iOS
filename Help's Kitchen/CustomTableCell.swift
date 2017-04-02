@@ -10,8 +10,6 @@ import UIKit
 
 class CustomTableCell: UITableViewCell {
     
-    override var detailTextLabel: UILabel? = UILabel()
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -31,11 +29,6 @@ class CustomTableCell: UITableViewCell {
         self.backgroundColor = UIColor.black
         
         
-    }
-    
-    func setupDetailTextLabel() {
-        self.detailTextLabel?.translatesAutoresizingMaskIntoConstraints
-        self.detailTextLabel?.addConstraint(self.backgroundView?.leftAnchor)
     }
 
 }

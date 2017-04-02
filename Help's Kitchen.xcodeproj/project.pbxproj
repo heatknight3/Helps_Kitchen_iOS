@@ -37,6 +37,9 @@
 		6E8326681E6DBE4500AC59C5 /* NewReservationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8326671E6DBE4500AC59C5 /* NewReservationController.swift */; };
 		6E83266A1E6DCD9E00AC59C5 /* DataAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8326691E6DCD9E00AC59C5 /* DataAccess.swift */; };
 		6E83266C1E6DFB1500AC59C5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6E83266B1E6DFB1500AC59C5 /* GoogleService-Info.plist */; };
+		6EDA7A271E918005008A19B1 /* NewDrinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EDA7A261E918005008A19B1 /* NewDrinkViewController.swift */; };
+		6EDA7A291E918015008A19B1 /* NewFoodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EDA7A281E918015008A19B1 /* NewFoodViewController.swift */; };
+		6EDA7A2B1E9195AA008A19B1 /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EDA7A2A1E9195AA008A19B1 /* MenuItem.swift */; };
 		6EE85F631E6DBB2B0034DB23 /* OrderedItemList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE85F621E6DBB2B0034DB23 /* OrderedItemList.swift */; };
 /* End PBXBuildFile section */
 
@@ -74,6 +77,9 @@
 		6E8326671E6DBE4500AC59C5 /* NewReservationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewReservationController.swift; sourceTree = "<group>"; };
 		6E8326691E6DCD9E00AC59C5 /* DataAccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataAccess.swift; sourceTree = "<group>"; };
 		6E83266B1E6DFB1500AC59C5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		6EDA7A261E918005008A19B1 /* NewDrinkViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewDrinkViewController.swift; sourceTree = "<group>"; };
+		6EDA7A281E918015008A19B1 /* NewFoodViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewFoodViewController.swift; sourceTree = "<group>"; };
+		6EDA7A2A1E9195AA008A19B1 /* MenuItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
 		6EE85F621E6DBB2B0034DB23 /* OrderedItemList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderedItemList.swift; sourceTree = "<group>"; };
 		AF2488C4685EBC5126FDC1A3 /* Pods-Help's Kitchen.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Help's Kitchen.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Help's Kitchen/Pods-Help's Kitchen.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -203,6 +209,7 @@
 				6E0CD3A31E57539400FDD435 /* Reservation.swift */,
 				6E8326691E6DCD9E00AC59C5 /* DataAccess.swift */,
 				6E3B25B31E904CD60041CFAF /* Order.swift */,
+				6EDA7A2A1E9195AA008A19B1 /* MenuItem.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -210,11 +217,13 @@
 		6E0CD3A71E575DBB00FDD435 /* Server */ = {
 			isa = PBXGroup;
 			children = (
+				6E3B25AF1E9027DC0041CFAF /* ServerTabBarController.swift */,
 				6E0CD3A51E575D1700FDD435 /* ServerTableController.swift */,
 				6E0CD3A81E5FCA7400FDD435 /* TableInfoViewController.swift */,
-				6E3B25AF1E9027DC0041CFAF /* ServerTabBarController.swift */,
 				6E3B25B11E903A670041CFAF /* ServerOrderViewController.swift */,
 				6E3B25B51E905C1C0041CFAF /* NewOrderViewController.swift */,
+				6EDA7A261E918005008A19B1 /* NewDrinkViewController.swift */,
+				6EDA7A281E918015008A19B1 /* NewFoodViewController.swift */,
 			);
 			name = Server;
 			sourceTree = "<group>";
@@ -356,15 +365,18 @@
 				6E0CD38A1E525B6300FDD435 /* SeatedViewController.swift in Sources */,
 				6E0CD38C1E52631B00FDD435 /* AddItemsViewController.swift in Sources */,
 				6E0CD3951E54B5E800FDD435 /* CustomColor.swift in Sources */,
+				6EDA7A271E918005008A19B1 /* NewDrinkViewController.swift in Sources */,
 				6E0CD3981E54D01500FDD435 /* HostSeatingController.swift in Sources */,
 				6E0CD3851E52008C00FDD435 /* WaitingViewController.swift in Sources */,
 				6E0CD39A1E54D04400FDD435 /* CustomTableViewController.swift in Sources */,
+				6EDA7A2B1E9195AA008A19B1 /* MenuItem.swift in Sources */,
 				6E8326681E6DBE4500AC59C5 /* NewReservationController.swift in Sources */,
 				6E0CD36B1E50DC8F00FDD435 /* LoginViewController.swift in Sources */,
 				6E3B25B41E904CD70041CFAF /* Order.swift in Sources */,
 				6E0CD3A91E5FCA7400FDD435 /* TableInfoViewController.swift in Sources */,
 				6E0CD3A41E57539400FDD435 /* Reservation.swift in Sources */,
 				6E0CD3691E50DC8F00FDD435 /* AppDelegate.swift in Sources */,
+				6EDA7A291E918015008A19B1 /* NewFoodViewController.swift in Sources */,
 				6E3B25AE1E8EDAEE0041CFAF /* SeatedTableViewController.swift in Sources */,
 				6E0CD3711E50DC8F00FDD435 /* Help_s_Kitchen.xcdatamodeld in Sources */,
 				6E3B25B01E9027DC0041CFAF /* ServerTabBarController.swift in Sources */,

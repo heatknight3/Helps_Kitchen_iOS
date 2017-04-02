@@ -33,27 +33,6 @@ class NewFoodViewController: CustomTableViewController {
         // Do any additional setup after loading the view.
     }
     
-    func initOrderStructs() {
-        
-        orderArray = [OrderStatus]()
-        
-        placedOrders.status = "Placed"
-        inProgressOrders.status = "In Progress"
-        readyOrders.status = "Ready"
-        seeKitchenOrders.status = "See Kitchen"
-        
-        placedOrders.orders = [Order]()
-        inProgressOrders.orders = [Order]()
-        readyOrders.orders = [Order]()
-        seeKitchenOrders.orders = [Order]()
-        
-        orderArray.append(placedOrders)
-        orderArray.append(inProgressOrders)
-        orderArray.append(readyOrders)
-        orderArray.append(seeKitchenOrders)
-        
-    }
-    
     func initFoodTypes() {
         
         foodArray = [FoodType]()
@@ -78,15 +57,11 @@ class NewFoodViewController: CustomTableViewController {
         
         ref.child("Menu").child("Food").observeSingleEvent(of: .value, with: { (snapshot) in
             
-            initFoodTypes()
+            self.initFoodTypes()
             
             for eachFoodType in snapshot.children {
                 let thisFoodType = eachFoodType as! FIRDataSnapshot
                 
-                switch thisFoodType.key {
-                case "Appetizers":
-                    appetizers.items
-                }
             }
             
         })

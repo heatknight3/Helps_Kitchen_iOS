@@ -7,11 +7,34 @@
 //
 
 import UIKit
+import Firebase
 
-class ServerTabBarController: UITabBarController {
+
+class ServerTabBarController: UITabBarController, UITabBarControllerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.delegate = self
+        
+        let tableController = ServerTableController()
+        
+        let tabOne = CustomNavigationController(rootViewController: tableController)
+        
+        let tabOneBarItem = UITabBarItem(title: "Tables", image: nil, selectedImage: nil)
+        
+        tabOne.tabBarItem = tabOneBarItem
+        
+        let orderController = ServerOrderViewController()
+        
+        let tabTwo = CustomNavigationController(rootViewController: orderController)
+        
+        let tabTwoBarItem = UITabBarItem(title: "Orders", image: nil, selectedImage: nil)
+        
+        tabTwo.tabBarItem = tabTwoBarItem
+        
+        self.viewControllers = [tabOne, tabTwo]
+        
 
         // Do any additional setup after loading the view.
     }
@@ -20,16 +43,4 @@ class ServerTabBarController: UITabBarController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

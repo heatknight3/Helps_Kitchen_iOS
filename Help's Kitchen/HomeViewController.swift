@@ -46,11 +46,9 @@ class HomeViewController: UIViewController {
                                     
                                     self.present(navController, animated: true, completion: nil)
                                 case "Server":
-                                    let serverController = ServerTableController()
+                                    let serverController = ServerTabBarController()
                                 
-                                    let navController = CustomNavigationController(rootViewController: serverController)
-                                
-                                    self.present(navController, animated: true, completion: nil)
+                                    self.present(serverController, animated: true, completion: nil)
                                 case "Kitchen":
                                     print("Not supported")
                                     self.handleLogout()

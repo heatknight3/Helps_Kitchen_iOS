@@ -19,24 +19,31 @@ class ServerTableController: CustomTableViewController {
         var tables: [Table]!
     }
     
+    var assignedTables = [String]()
     var availableTables = TableStatus()
     var seatedTables = TableStatus()
     
     var tableArray = [TableStatus]()
+    
+    var closePressed: Bool = false
 
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         tableView.register(CustomTableCell.self, forCellReuseIdentifier: "cell")
+        
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         
-        navigationItem.title = "Tables"
-        self.navigationController!.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : CustomColor.amber500]
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(handleClose))
         
-        initTableStructs()
+        navigationItem.rightBarButtonItem?.tintColor = CustomColor.gray
+        
+        navigationItem.title = "Tables"
+        
+        fetchServerTables()
         fetchTables()
-        // Do any additional setup after loading the view.
     }
-
+    
     func handleLogout() {
         do{
             try FIRAuth.auth()?.signOut()
@@ -44,38 +51,72 @@ class ServerTableController: CustomTableViewController {
             print(logoutError)
         }
         dismiss(animated: true, completion: nil)
+    }
+    
+    func handleClose() {
+        if closePressed {
+            navigationItem.rightBarButtonItem?.tintColor = CustomColor.gray
+            closePressed = false
+        }else {
+            navigationItem.rightBarButtonItem?.tintColor = CustomColor.Yellow500
+            closePressed = true
+        }
         
     }
     
     func initTableStructs() {
         
+        tableArray = [TableStatus]()
+        
         availableTables.status = "Available"
         seatedTables.status = "Seated"
         availableTables.tables = [Table]()
         seatedTables.tables = [Table]()
+        
         tableArray.append(seatedTables)
         tableArray.append(availableTables)
+    }
+    
+    func fetchServerTables() {
         
+        ref.child("Users").child("Server").child((FIRAuth.auth()?.currentUser?.uid)!).child("assignedTables").observe(.value, with: { (snapshot) in
+            
+            if let tables = snapshot.value as! [String]? {
+                self.assignedTables = tables
+            }
+            
+        })
     }
     
     func fetchTables() {
-        ref.child("tables").observeSingleEvent(of: .value , with: { (snapshot) in
+        ref.child("Tables").observe(.value, with: { (snapshot) in
+            
+            self.initTableStructs()
+            
             print(snapshot)
             
             for eachTable in snapshot.children {
                 
                 let table = Table()
                 
-                if let dict = (eachTable as! FIRDataSnapshot).value as? [String : AnyObject] {
+                let thisTable = eachTable as! FIRDataSnapshot
+                
+                if self.assignedTables.contains(thisTable.key) {
                     
-                    table.name = dict["tableName"] as! String?
-                    table.key = (eachTable as!FIRDataSnapshot).key
-                    table.status = dict["tableStatus"] as! String?
-                    
-                    if(table.status == "available"){
-                        self.tableArray[1].tables.append(table)
-                    }else if table.status == "seated"{
-                        self.tableArray[0].tables.append(table)
+                    if let dict = thisTable.value as? [String : AnyObject] {
+                        
+                        table.name = dict["name"] as! String?
+                        table.key = (eachTable as!FIRDataSnapshot).key
+                        table.status = dict["status"] as! String?
+                        table.capacity = dict["capacity"] as! Int?
+                        table.reservationName = dict["reservationName"] as! String?
+                        table.orders = dict["Orders"] as! [String]?
+                        
+                        if(table.status == "seated"){
+                            self.tableArray[0].tables.append(table)
+                        }else if table.status == "available"{
+                            self.tableArray[1].tables.append(table)
+                        }
                     }
                 }
             }
@@ -86,23 +127,31 @@ class ServerTableController: CustomTableViewController {
             
         })
     }
+
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> CustomTableCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableCell
         
         cell.textLabel?.text = tableArray[indexPath.section].tables[indexPath.row].name
-        cell.textLabel?.textColor = CustomColor.amber500
-        cell.backgroundColor = UIColor.black
+        cell.detailTextLabel?.text = tableArray[indexPath.section].tables[indexPath.row].reservationName!
+        
+        cell.setColors()
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let tableInfoController = TableInfoViewController()
-        tableInfoController.table = tableArray[indexPath.section].tables[indexPath.row]
         
-        let navController = UINavigationController(rootViewController: tableInfoController)
-        
-        present(navController, animated: true, completion: nil)
+        if closePressed {
+        ref.child("Tables").child(tableArray[indexPath.section].tables[indexPath.row].key!).child("status").setValue("available")
+            
+        }else {
+            let tableInfoController = TableInfoViewController()
+            tableInfoController.selectedTable = tableArray[indexPath.section].tables[indexPath.row]
+            
+            let navController = CustomNavigationController(rootViewController: tableInfoController)
+            
+            present(navController, animated: true, completion: nil)
+        }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -115,7 +164,7 @@ class ServerTableController: CustomTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        view.tintColor = CustomColor.amber500
+        view.tintColor = CustomColor.Yellow500
         (view as! UITableViewHeaderFooterView).textLabel?.textColor = UIColor.black
     }
     

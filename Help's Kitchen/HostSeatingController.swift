@@ -23,19 +23,15 @@ class HostSeatingController: CustomTableViewController {
     
     var tableArray = [TableStatus]()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.register(CustomTableCell.self, forCellReuseIdentifier: "cell")
-        initTableStructs()
         fetchTables()
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
-        navigationItem.leftBarButtonItem?.tintColor = CustomColor.UCFGold
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(handleNewReservation))
-        navigationItem.rightBarButtonItem?.tintColor = CustomColor.UCFGold
     }
     
     func handleLogout() {
@@ -45,7 +41,6 @@ class HostSeatingController: CustomTableViewController {
             print(logoutError)
         }
         dismiss(animated: true, completion: nil)
-        
     }
     
     func handleNewReservation() {
@@ -55,10 +50,11 @@ class HostSeatingController: CustomTableViewController {
         let navController = CustomNavigationController(rootViewController: newResController)
         
         present(navController, animated: true, completion: nil)
-        
     }
     
     func initTableStructs() {
+        
+        tableArray = [TableStatus]()
         
         availableTables.status = "Available"
         seatedTables.status = "Seated"
@@ -70,19 +66,25 @@ class HostSeatingController: CustomTableViewController {
     }
     
     func fetchTables() {
-        ref.child("Tables").observeSingleEvent(of: .value , with: { (snapshot) in
+        
+        ref.child("Tables").observe(.value, with: { (snapshot) in
+            
+            self.initTableStructs()
+            
             print(snapshot)
             
             for eachTable in snapshot.children {
-                
+            
                 let table = Table()
-                
+            
                 if let dict = (eachTable as! FIRDataSnapshot).value as? [String : AnyObject] {
-                    
-                    
+            
                     table.name = dict["name"] as! String?
                     table.key = (eachTable as!FIRDataSnapshot).key
                     table.status = dict["status"] as! String?
+                    table.capacity = dict["capacity"] as! Int?
+                    table.reservationName = dict["reservationName"] as! String?
+                    table.newStatus = dict["newStatus"] as! String?
                     
                     if(table.status == "available"){
                         self.tableArray[0].tables.append(table)
@@ -92,10 +94,10 @@ class HostSeatingController: CustomTableViewController {
                 }
             }
             
+            
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
-            
         })
     }
 
@@ -118,24 +120,35 @@ class HostSeatingController: CustomTableViewController {
         return tableArray[section].tables.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> CustomTableCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableCell
         
         cell.textLabel?.text = tableArray[indexPath.section].tables[indexPath.row].name
-        cell.textLabel?.textColor = CustomColor.UCFGold
-        cell.backgroundColor = UIColor.black
+        if (tableArray[indexPath.section].tables[indexPath.row].newStatus == "true")
+        {
+            cell.setGreen()
+            
+        }
+        else
+        {
+            cell.setColors()
+        }
+    
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let assignToTableController = AssignToTableController()
-        assignToTableController.selectedTable = tableArray[indexPath.section].tables[indexPath.row]
         
-        let navController = UINavigationController(rootViewController: assignToTableController)
-         ref.child("misc").child("seatingQueue")
-        present(navController, animated: true, completion: nil)
+        if indexPath[0] == 0 {
+            let assignToTableController = AssignToTableController()
+            assignToTableController.selectedTable = tableArray[indexPath.section].tables[indexPath.row]
+            let navController = CustomNavigationController(rootViewController: assignToTableController)
+            present(navController, animated: true, completion: nil)
+        } else if indexPath[0] == 1 {
+            let seatedController = SeatedTableViewController()
+            seatedController.selectedTable = tableArray[indexPath.section].tables[indexPath.row]
+            let navController = CustomNavigationController(rootViewController: seatedController)
+            present(navController, animated: true, completion: nil)
+        }
     }
-    
-
-
 }

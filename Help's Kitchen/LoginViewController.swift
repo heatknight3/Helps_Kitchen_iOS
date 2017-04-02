@@ -66,20 +66,6 @@ class LoginViewController: UIViewController {
                 return
             }
             
-            /*guard let uid = FIRAuth.auth()?.currentUser?.uid else {
-                return
-            }
-            
-                FIRDatabase.database().reference().child("users").child(uid).child("userType").observeSingleEvent(of: .value, with: { (snapshot) in
-                    
-                    
-                    let userType = snapshot.v\lue as! String
-                    
-                    if userType == "customer" {
-                        self.home?.present(ReservationViewController(), animated: true, completion: nil)
-                    }
-                })*/
-            
             self.dismiss(animated: true, completion: nil)
         })
     }
@@ -292,17 +278,5 @@ class LoginViewController: UIViewController {
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
-    }
-    
-}
-
-//Lucas's sexy ass animation
-extension UIView {
-    func shake() {
-        let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
-        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
-        animation.duration = 0.6
-        animation.values = [-20.0, 20.0, -20.0, 20.0, -10.0, 10.0, -5.0, 5.0, 0.0 ]
-        layer.add(animation, forKey: "shake")
     }
 }

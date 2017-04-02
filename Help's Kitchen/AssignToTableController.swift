@@ -38,10 +38,10 @@ class AssignToTableController: CustomTableViewController {
         ref.child("ReservationQueue").observe(.value, with: { (snapshot) in
             print(snapshot)
             self.reservationIds = ((snapshot.value) as! [String])
-            
+            print(self.reservationIds)
             
         })
-        ref.child("users").observeSingleEvent(of: .value, with: { (snapshot) in
+        ref.child("Reservations").observeSingleEvent(of: .value, with: { (snapshot) in
             
             for eachRes in snapshot.children {
                 
@@ -54,8 +54,7 @@ class AssignToTableController: CustomTableViewController {
                         let tempReservation = Reservation()
                         
                         tempReservation.name = dict["name"] as? String
-                        tempReservation.partySize = dict["partySize"] as? Int
-                        tempReservation.key = thisRes.key
+                        tempReservation.partySize = dict["partySize"] as! NSNumber?
                         
                         self.reservations.append(tempReservation)
                     }
@@ -65,7 +64,6 @@ class AssignToTableController: CustomTableViewController {
                 self.tableView.reloadData()
             }
         })
-        
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -77,12 +75,11 @@ class AssignToTableController: CustomTableViewController {
         return reservations.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> CustomTableCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableCell
         
         cell.textLabel?.text = reservations[indexPath.row].name
-        cell.textLabel?.textColor = CustomColor.amber500
-        cell.backgroundColor = UIColor.black
+        cell.setColors()
         return cell
     }
     
@@ -92,7 +89,8 @@ class AssignToTableController: CustomTableViewController {
         ref.child("Tables").child((selectedTable?.key)!).child("reservationName").setValue(reservations[indexPath.row].name)
         
         //change table status
-        ref.child("Tables").child((selectedTable?.key)!).child("tableStatus").setValue("seated")
+        ref.child("Tables").child((selectedTable?.key)!).child("status").setValue("seated")
+        ref.child("Tables").child((selectedTable?.key)!).child("newStatus").setValue("false")
         
         //remove from seatingQueue
         removeUserFromQueue(index: indexPath.row)
@@ -103,7 +101,7 @@ class AssignToTableController: CustomTableViewController {
         var tempQueue = [String]()
         
         for res in reservations {
-            tempQueue.append(res.key!)
+            tempQueue.append(res.name!)
         }
         
         if tempQueue.count == 1 {

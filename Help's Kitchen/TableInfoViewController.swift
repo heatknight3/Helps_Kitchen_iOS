@@ -9,11 +9,23 @@
 import UIKit
 import Firebase
 
-class TableInfoViewController: UIViewController {
+class TableInfoViewController: CustomTableViewController {
     
     let ref = FIRDatabase.database().reference(fromURL: DataAccess.URL)
     
-    var table: Table?
+    var selectedTable: Table?
+    
+    struct OrderStatus {
+        var status: String!
+        var orders: [Order]!
+    }
+    
+    var placedOrders = OrderStatus()
+    var inProgressOrders = OrderStatus()
+    var readyOrders = OrderStatus()
+    var seeKitchenOrders = OrderStatus()
+    
+    var orderArray = [OrderStatus]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,7 +35,7 @@ class TableInfoViewController: UIViewController {
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Ready", style: .plain, target: self, action: #selector(handleReady))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add Order", style: .plain, target: self, action: #selector(handleNewOrder))
         // Do any additional setup after loading the view.
     }
     
@@ -31,9 +43,10 @@ class TableInfoViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    func handleReady() {
-        ref.child("tables").child((table?.key)!).child("tableStatus").setValue("available")
-        dismiss(animated: true, completion: nil)
+    func handleNewOrder() {
+        let orderController = NewOrderViewController()
+        
+        present(orderController, animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {

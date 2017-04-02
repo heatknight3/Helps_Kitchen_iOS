@@ -37,5 +37,4 @@ class OrderedItemList: CustomTableViewController {
         return 0
     }
 
-
 }

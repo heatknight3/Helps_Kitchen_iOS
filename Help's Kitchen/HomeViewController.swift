@@ -30,54 +30,34 @@ class HomeViewController: UIViewController {
         if uid == nil {
             handleLogout()
         }else{
-            ref.child("Users").child(uid!).observeSingleEvent(of: .value, with: { (snapshot) in
-                let values = snapshot.value as? [String : AnyObject]
-                
-                let userType = values?["type"] as! String
-                
-                /*if userType == "customer" {
+            ref.child("Users").observeSingleEvent(of: .value, with: { (snapshot) in
+                for userType in snapshot.children {
+                    let currentUserType = userType as! FIRDataSnapshot
                     
-                    let customerHasReservation = values?["customerHasReservation"] as! Bool
-                    let customerIsSeated = values?["customerIsSeated"] as! Bool
-                    
-                    if customerHasReservation {
+                    for user in currentUserType.children {
+                        let currentUser = user as! FIRDataSnapshot
                         
-                        if customerIsSeated {
-                            
-                            let tableStatusController = SeatedViewController()
-                            
-                            let navController = CustomNavigationController(rootViewController: tableStatusController)
-                            self.present(navController, animated: true, completion: nil)
-                            
-                        }else{
-                            
-                            let waitingController = WaitingViewController()
-                        
-                            let navController = CustomNavigationController(rootViewController: waitingController)
-                        
-                            self.present(navController, animated: true, completion: nil)
+                        if currentUser.key == uid {
+                            switch currentUserType.key{
+                                case "Host":
+                                    let hostController = HostSeatingController()
+                                    
+                                    let navController = CustomNavigationController(rootViewController: hostController)
+                                    
+                                    self.present(navController, animated: true, completion: nil)
+                                case "Server":
+                                    let serverController = ServerTabBarController()
+                                
+                                    self.present(serverController, animated: true, completion: nil)
+                                case "Kitchen":
+                                    print("Not supported")
+                                    self.handleLogout()
+                                    //TODO Add Kitchen ViewController
+                            default:
+                                self.handleLogout()
+                            }
                         }
-                        
-                    }else{
-                        let reservationController = ReservationViewController()
-                        
-                        let navController = CustomNavigationController(rootViewController: reservationController)
-                        
-                        self.present(navController, animated: true, completion: nil)
                     }
-                }else*/ if userType == "Host" {
-                    
-                    let hostController = HostSeatingController()
-                    
-                    let navController = CustomNavigationController(rootViewController: hostController)
-                    
-                    self.present(navController, animated: true, completion: nil)
-                }else if userType == "Server" {
-                    let serverController = ServerTableController()
-                    
-                    let navController = CustomNavigationController(rootViewController: serverController)
-                    
-                    self.present(navController, animated: true, completion: nil)
                 }
             })
         }

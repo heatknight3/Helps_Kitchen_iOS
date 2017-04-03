@@ -7,35 +7,168 @@
 //
 
 import UIKit
+import Firebase
 
 class NewDrinkViewController: CustomTableViewController {
+    
+    let ref = FIRDatabase.database().reference(fromURL: DataAccess.URL)
+    
+    var selectedTable: Table?
+    
+    struct DrinkType {
+        var keys: [String]!
+        var type: String!
+        var items: [MenuItem]!
+    }
+    
+    var softDrinks = DrinkType()
+    var alcohol = DrinkType()
+    
+    var drinkArray = [DrinkType]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.register(CustomTableCell.self, forCellReuseIdentifier: "cell")
+        
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
 
         // Do any additional setup after loading the view.
+        
+        fetchMenu()
     }
     
     func handleCancel() {
         dismiss(animated: true, completion: nil)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func initDrinkTypes() {
+        
+        drinkArray = [DrinkType]()
+        
+        softDrinks.type = "Soft Drinks"
+        alcohol.type = "Alcohol"
+        
+        softDrinks.items = [MenuItem]()
+        alcohol.items = [MenuItem]()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func fetchMenu(){
+        
+        ref.child("Menu").observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            self.initDrinkTypes()
+            
+            let drinksSnapshot = snapshot.childSnapshot(forPath: "Drinks")
+            
+            for eachDrinkType in drinksSnapshot.children {
+                let thisDrinkType = eachDrinkType as! FIRDataSnapshot
+                
+                if let stringArray = thisDrinkType.value as! [String]? {
+                    
+                    switch thisDrinkType.key {
+                    case "SoftDrinks":
+                        self.softDrinks.keys = stringArray
+                        self.softDrinks.items = self.getItemsWith(keyArray: stringArray, menuItemSnapshot: snapshot.childSnapshot(forPath: "MenuItems"))
+                    case "Alcohol":
+                        self.alcohol.keys = stringArray
+                        self.alcohol.items = self.getItemsWith(keyArray: stringArray, menuItemSnapshot: snapshot.childSnapshot(forPath: "MenuItems"))
+                    default:
+                        print("Food type doesn't exist")
+                    }
+                }
+            }
+            
+            self.drinkArray.append(self.softDrinks)
+            self.drinkArray.append(self.alcohol)
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        })
     }
-    */
+    
+    func getItemsWith(keyArray: [String], menuItemSnapshot: FIRDataSnapshot) -> [MenuItem] {
+        
+        var items = [MenuItem]()
+        
+        for key in keyArray{
+            
+            if key != ""  {
+                
+                if let dict = menuItemSnapshot.childSnapshot(forPath: key).value as! [String : AnyObject]? {
+                    let item = MenuItem()
+                    
+                    item.setValuesForKeys(dict)
+                    items.append(item)
+                }
+            }
+        }
+        
+        return items
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        ref.child("Tables").child((selectedTable?.key)!).child("Orders").observeSingleEvent(of: .value, with: {(snapshot) in
+            
+            if var orderKeys = snapshot.value as! [String]? {
+                
+                if orderKeys[0] == "" {
+                    orderKeys[0] = self.drinkArray[indexPath.section].keys[indexPath.row]
+                }else {
+                    orderKeys.append(self.drinkArray[indexPath.section].keys[indexPath.row])
+                }
+                
+                let refreshAlert = UIAlertController(title: "Confirm Order", message: "Do you want to place an order for " + self.drinkArray[indexPath.section].items[indexPath.row].name! + "?", preferredStyle: UIAlertControllerStyle.alert)
+                
+                refreshAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action: UIAlertAction!) in
+                    print("Handle Ok logic here")
+                    
+                    self.ref.child("Tables").child((self.selectedTable?.key)!).child("Orders").setValue(orderKeys)
+                }))
+                
+                refreshAlert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { (action: UIAlertAction!) in
+                    print("Handle Cancel Logic here")
+                    
+                }))
+                
+                self.present(refreshAlert, animated: true, completion: nil)
+                
+                tableView.cellForRow(at: indexPath)?.isSelected = false
+                
+            }
+            
+        })
+        
+    }
+
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> CustomTableCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableCell
+        
+        cell.textLabel?.text = drinkArray[indexPath.section].items[indexPath.row].name
+        cell.setColors()
+        return cell
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        // #warning Incomplete implementation, return the number of sections
+        return drinkArray.count
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return drinkArray[section].type
+    }
+    
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        view.tintColor = CustomColor.Yellow500
+        (view as! UITableViewHeaderFooterView).textLabel?.textColor = UIColor.black
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // #warning Incomplete implementation, return the number of rows
+        return drinkArray[section].items.count
+    }
 
 }

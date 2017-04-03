@@ -220,10 +220,10 @@
 				6E3B25AF1E9027DC0041CFAF /* ServerTabBarController.swift */,
 				6E0CD3A51E575D1700FDD435 /* ServerTableController.swift */,
 				6E0CD3A81E5FCA7400FDD435 /* TableInfoViewController.swift */,
-				6E3B25B11E903A670041CFAF /* ServerOrderViewController.swift */,
 				6E3B25B51E905C1C0041CFAF /* NewOrderViewController.swift */,
-				6EDA7A261E918005008A19B1 /* NewDrinkViewController.swift */,
 				6EDA7A281E918015008A19B1 /* NewFoodViewController.swift */,
+				6EDA7A261E918005008A19B1 /* NewDrinkViewController.swift */,
+				6E3B25B11E903A670041CFAF /* ServerOrderViewController.swift */,
 			);
 			name = Server;
 			sourceTree = "<group>";

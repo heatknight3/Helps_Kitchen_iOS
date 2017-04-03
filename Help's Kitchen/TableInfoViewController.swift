@@ -45,6 +45,7 @@ class TableInfoViewController: CustomTableViewController {
     
     func handleNewOrder() {
         let orderController = NewOrderViewController()
+        orderController.selectedTable = self.selectedTable
         
         present(orderController, animated: true, completion: nil)
     }

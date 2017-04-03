@@ -9,13 +9,22 @@
 import UIKit
 
 class NewOrderViewController: UITabBarController, UITabBarControllerDelegate {
+    
+    var selectedTable: Table?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
         self.delegate = self
         
         let newFoodController = NewFoodViewController()
+        newFoodController.selectedTable = self.selectedTable
         
         let tabOne = CustomNavigationController(rootViewController: newFoodController)
         
@@ -24,6 +33,7 @@ class NewOrderViewController: UITabBarController, UITabBarControllerDelegate {
         tabOne.tabBarItem = tabOneBarItem
         
         let newDrinkController = NewDrinkViewController()
+        newDrinkController.selectedTable = self.selectedTable
         
         let tabTwo = CustomNavigationController(rootViewController: newDrinkController)
         
@@ -33,7 +43,5 @@ class NewOrderViewController: UITabBarController, UITabBarControllerDelegate {
         
         self.viewControllers = [tabOne, tabTwo]
     }
-
     
-
 }

@@ -16,6 +16,7 @@ class TableInfoViewController: CustomTableViewController {
     var selectedTable: Table?
     
     struct OrderStatus {
+        var keys: [String]!
         var status: String!
         var orders: [Order]!
     }
@@ -30,13 +31,97 @@ class TableInfoViewController: CustomTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.register(CustomTableCell.self, forCellReuseIdentifier: "cell")
+        
         navigationItem.title = "Tables"
-        self.navigationController!.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : CustomColor.amber500]
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add Order", style: .plain, target: self, action: #selector(handleNewOrder))
         // Do any additional setup after loading the view.
+        
+        fetchTableOrders()
+    }
+    
+    func initOrderArrays(){
+        orderArray = [OrderStatus]()
+    
+        placedOrders.status = "Placed"
+        inProgressOrders.status = "In Progress"
+        readyOrders.status = "Ready"
+        seeKitchenOrders.status = "See Kitchen"
+        
+        placedOrders.orders = [Order]()
+        inProgressOrders.orders = [Order]()
+        readyOrders.orders = [Order]()
+        seeKitchenOrders.orders = [Order]()
+    }
+
+    
+    func fetchTableOrders() {
+        
+        ref.child("Orders").observe(.value, with: { (snapshot) in
+            
+            self.initOrderArrays()
+            
+            let orderListSnapshot = snapshot.childSnapshot(forPath: "OrderList")
+            
+            for eachOrderStatus in snapshot.children {
+                let thisOrderStatus = eachOrderStatus as! FIRDataSnapshot
+                
+                if thisOrderStatus.key != "OrderList" {
+                    
+                    if let stringArray = (thisOrderStatus.value as! [String]?) {
+                        
+                        switch thisOrderStatus.key {
+                        case "Placed":
+                            self.placedOrders.keys = stringArray
+                            self.placedOrders.orders = self.getOrdersWith(keyArray: stringArray, orderListSnapshot: orderListSnapshot)
+                        case "InProgress":
+                            self.inProgressOrders.keys = stringArray
+                            self.inProgressOrders.orders = self.getOrdersWith(keyArray: stringArray, orderListSnapshot: orderListSnapshot)
+                        case "SeeKitchen":
+                            self.seeKitchenOrders.keys = stringArray
+                            self.seeKitchenOrders.orders = self.getOrdersWith(keyArray: stringArray, orderListSnapshot: orderListSnapshot)
+                        case "Ready":
+                            self.readyOrders.keys = stringArray
+                            self.readyOrders.orders = self.getOrdersWith(keyArray: stringArray, orderListSnapshot: orderListSnapshot)
+                        default:
+                            print("not one of those")
+                        }
+                    }
+                }
+            }
+            
+            self.orderArray.append(self.readyOrders)
+            self.orderArray.append(self.seeKitchenOrders)
+            self.orderArray.append(self.inProgressOrders)
+            self.orderArray.append(self.placedOrders)
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        })
+    }
+    
+    func getOrdersWith(keyArray: [String], orderListSnapshot: FIRDataSnapshot) -> [Order] {
+        
+        var orders = [Order]()
+        
+        for key in keyArray{
+            
+            if key != "" && (selectedTable?.orders?.contains(key))! {
+                
+                if let dict = orderListSnapshot.childSnapshot(forPath: key).value as! [String : AnyObject]? {
+                    let order = Order()
+                    
+                    order.setValuesForKeys(dict)
+                    orders.append(order)
+                }
+            }
+        }
+        
+        return orders
     }
     
     func handleCancel() {
@@ -47,12 +132,37 @@ class TableInfoViewController: CustomTableViewController {
         let orderController = NewOrderViewController()
         orderController.selectedTable = self.selectedTable
         
-        present(orderController, animated: true, completion: nil)
+        present(orderController, animated: true, completion: {
+            self.fetchTableOrders()
+        })
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> CustomTableCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableCell
+        
+        cell.textLabel?.text = orderArray[indexPath.section].orders[indexPath.row].item
+        cell.setColors()
+        return cell
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        // #warning Incomplete implementation, return the number of sections
+        return orderArray.count
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return orderArray[section].status
+    }
+    
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        view.tintColor = CustomColor.Yellow500
+        (view as! UITableViewHeaderFooterView).textLabel?.textColor = UIColor.black
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // #warning Incomplete implementation, return the number of rows
+        return orderArray[section].orders.count
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 
 }

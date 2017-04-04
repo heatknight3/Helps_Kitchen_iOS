@@ -93,14 +93,12 @@ class ServerTableController: CustomTableViewController {
             
             self.initTableStructs()
             
-            print(snapshot)
-            
             for eachTable in snapshot.children {
                 
                 let table = Table()
                 
                 let thisTable = eachTable as! FIRDataSnapshot
-                print(thisTable.key)
+                
                 if self.assignedTables.contains(thisTable.key) {
                     
                     if let dict = thisTable.value as? [String : AnyObject] {

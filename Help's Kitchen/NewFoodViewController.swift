@@ -123,22 +123,48 @@ class NewFoodViewController: CustomTableViewController {
         dismiss(animated: true, completion: nil)
     }
     
+    func arrayWith(value: String, array: [String]) -> [String]{
+        var tempArray = array
+        
+        if array[0] == "" {
+            tempArray[0] = value
+        }else {
+            tempArray.append(value)
+        }
+        
+        return tempArray
+    }
+    
+    func toMilliseconds(str: String) -> String{
+        var temp = str
+        
+        temp = temp.replacingOccurrences(of: ".", with: "")
+        temp = temp.substring(to: temp.index(temp.startIndex, offsetBy: 12))
+        
+        return temp
+    }
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         ref.child("Tables").child((selectedTable?.key)!).child("Orders").observeSingleEvent(of: .value, with: {(snapshot) in
         
             if var orderKeys = snapshot.value as! [String]? {
                 
-                if orderKeys[0] == "" {
-                    orderKeys[0] = self.foodArray[indexPath.section].keys[indexPath.row]
-                }else {
-                    orderKeys.append(self.foodArray[indexPath.section].keys[indexPath.row])
-                }
+                var orderKey = String(NSDate.init().timeIntervalSince1970)
+                
+                orderKey = self.toMilliseconds(str: orderKey)
+                
+                print(orderKey)
+                
+                orderKeys = self.arrayWith(value: orderKey, array: orderKeys)
                 
                 let refreshAlert = UIAlertController(title: "Confirm Order", message: "Do you want to place an order for " + self.foodArray[indexPath.section].items[indexPath.row].name! + "?", preferredStyle: UIAlertControllerStyle.alert)
                 
                 refreshAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action: UIAlertAction!) in
-                    print("Handle Ok logic here")
+
+                    self.ref.child("Orders").child("OrderList").child(orderKey).setValue(["item":self.foodArray[indexPath.section].items[indexPath.row].name, "tableKey":(self.selectedTable?.key)!])
+                    
+                    self.ref.child("Orders").child("Placed").setValue(orderKeys)
                     
                     self.ref.child("Tables").child((self.selectedTable?.key)!).child("Orders").setValue(orderKeys)
                 }))

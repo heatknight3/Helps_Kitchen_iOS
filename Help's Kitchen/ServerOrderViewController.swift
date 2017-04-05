@@ -14,6 +14,7 @@ class ServerOrderViewController: CustomTableViewController {
     let ref = FIRDatabase.database().reference(fromURL: DataAccess.URL)
     
     struct OrderStatus {
+        var keys: [String]!
         var status: String!
         var orders: [Order]!
     }
@@ -27,6 +28,8 @@ class ServerOrderViewController: CustomTableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.register(CustomTableCell.self, forCellReuseIdentifier: "cell")
         
         navigationItem.title = "Orders"
         
@@ -59,67 +62,68 @@ class ServerOrderViewController: CustomTableViewController {
         readyOrders.orders = [Order]()
         seeKitchenOrders.orders = [Order]()
         
-        orderArray.append(placedOrders)
-        orderArray.append(inProgressOrders)
-        orderArray.append(readyOrders)
-        orderArray.append(seeKitchenOrders)
-        
     }
     
     func fetchOrders() {
         
-        initOrderStructs()
-        
-        ref.child("OrderList").observe(.value, with: { (snapshot) in
+        ref.child("Orders").observe(.value, with: { (snapshot) in
             
-            for eachStatus in snapshot.children {
+            self.initOrderStructs()
+            
+            let orderListSnapshot = snapshot.childSnapshot(forPath: "OrderList")
+            
+            for eachOrderStatus in snapshot.children {
+                let thisOrderStatus = eachOrderStatus as! FIRDataSnapshot
                 
-                let thisStatus = (eachStatus as! FIRDataSnapshot)
-                
-                if let stringArray = thisStatus.value as! [String]? {
+                if thisOrderStatus.key != "OrderList" {
                     
-                    switch thisStatus.key{
+                    if let stringArray = (thisOrderStatus.value as! [String]?) {
+                        
+                        switch thisOrderStatus.key {
                         case "Placed":
-                            self.placedOrders.orders = self.getOrdersWith(keyArray: stringArray)
+                            self.placedOrders.keys = stringArray
+                            self.placedOrders.orders = self.getOrdersWith(keyArray: stringArray, orderListSnapshot: orderListSnapshot)
                         case "InProgress":
-                            self.inProgressOrders.orders = self.getOrdersWith(keyArray: stringArray)
-                        case "Ready":
-                            self.readyOrders.orders = self.getOrdersWith(keyArray: stringArray)
+                            self.inProgressOrders.keys = stringArray
+                            self.inProgressOrders.orders = self.getOrdersWith(keyArray: stringArray, orderListSnapshot: orderListSnapshot)
                         case "SeeKitchen":
-                            self.seeKitchenOrders.orders = self.getOrdersWith(keyArray: stringArray)
-                    default:
-                        print("Uh oh")
+                            self.seeKitchenOrders.keys = stringArray
+                            self.seeKitchenOrders.orders = self.getOrdersWith(keyArray: stringArray, orderListSnapshot: orderListSnapshot)
+                        case "Ready":
+                            self.readyOrders.keys = stringArray
+                            self.readyOrders.orders = self.getOrdersWith(keyArray: stringArray, orderListSnapshot: orderListSnapshot)
+                        default:
+                            print("not one of those")
+                        }
                     }
                 }
             }
+            
+            self.orderArray.append(self.readyOrders)
+            self.orderArray.append(self.seeKitchenOrders)
+            self.orderArray.append(self.inProgressOrders)
+            self.orderArray.append(self.placedOrders)
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         })
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
     }
     
-    func getOrdersWith(keyArray: [String]) -> [Order]{
+    func getOrdersWith(keyArray: [String], orderListSnapshot: FIRDataSnapshot) -> [Order] {
         
         var orders = [Order]()
         
         for key in keyArray{
             
-            if key != ""  {
-            
-                ref.child("Orders").child(key).observeSingleEvent(of: .value, with: {(snapshot) in
+            if key != "" {
+                
+                if let dict = orderListSnapshot.childSnapshot(forPath: key).value as! [String : AnyObject]? {
                     let order = Order()
                     
-                    if let dict = snapshot.value as! [String: AnyObject]? {
-                        order.setValuesForKeys(dict)
-                    }
-                    
+                    order.setValuesForKeys(dict)
                     orders.append(order)
-                    
-                }, withCancel: { (error) in
-                    print(error)
-                })
-                
-                ref.child("Orders").child(key).removeAllObservers()
+                }
             }
         }
         

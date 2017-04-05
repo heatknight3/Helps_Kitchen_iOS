@@ -38,7 +38,6 @@ class NewFoodViewController: CustomTableViewController {
         // Do any additional setup after loading the view.
         
         fetchMenu()
-        
     }
     
     func initFoodTypes() {

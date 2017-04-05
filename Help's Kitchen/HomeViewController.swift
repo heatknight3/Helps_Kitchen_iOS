@@ -50,8 +50,11 @@ class HomeViewController: UIViewController {
                                 
                                     self.present(serverController, animated: true, completion: nil)
                                 case "Kitchen":
-                                    print("Not supported")
-                                    self.handleLogout()
+                                    let kitchenController = KitchenOrderListController()
+                                    
+                                    let navController = CustomNavigationController(rootViewController: kitchenController)
+                                    
+                                    self.present(navController, animated: true, completion: nil)
                                     //TODO Add Kitchen ViewController
                             default:
                                 self.handleLogout()

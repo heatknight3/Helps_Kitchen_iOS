@@ -170,6 +170,5 @@ class ServerTableController: CustomTableViewController {
         // #warning Incomplete implementation, return the number of rows
         return tableArray[section].tables.count
     }
-
-
+    
 }

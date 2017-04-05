@@ -87,7 +87,7 @@ class LoginViewController: UIViewController {
                 return
             }
             
-            let usersRef = self.ref.child("users")
+            let usersRef = self.ref.child("Users")
             
             usersRef.child(uid).updateChildValues(["name": name, "email": email], withCompletionBlock: {(err, ref) in
                 
@@ -127,7 +127,7 @@ class LoginViewController: UIViewController {
     
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "PokemonLogo")
+        imageView.image = UIImage(named: "HKTransparent")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         return imageView

@@ -38,6 +38,7 @@
 		6E83266A1E6DCD9E00AC59C5 /* DataAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8326691E6DCD9E00AC59C5 /* DataAccess.swift */; };
 		6E83266C1E6DFB1500AC59C5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6E83266B1E6DFB1500AC59C5 /* GoogleService-Info.plist */; };
 		6ECDCB8D1E9526C800BAA69C /* HKLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ECDCB8C1E9526C800BAA69C /* HKLogo.png */; };
+		6ECDCB8F1E954EF400BAA69C /* KitchenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ECDCB8E1E954EF400BAA69C /* KitchenViewController.swift */; };
 		6EDA7A271E918005008A19B1 /* NewDrinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EDA7A261E918005008A19B1 /* NewDrinkViewController.swift */; };
 		6EDA7A291E918015008A19B1 /* NewFoodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EDA7A281E918015008A19B1 /* NewFoodViewController.swift */; };
 		6EDA7A2B1E9195AA008A19B1 /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EDA7A2A1E9195AA008A19B1 /* MenuItem.swift */; };
@@ -79,6 +80,7 @@
 		6E8326691E6DCD9E00AC59C5 /* DataAccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataAccess.swift; sourceTree = "<group>"; };
 		6E83266B1E6DFB1500AC59C5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6ECDCB8C1E9526C800BAA69C /* HKLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = HKLogo.png; sourceTree = "<group>"; };
+		6ECDCB8E1E954EF400BAA69C /* KitchenViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KitchenViewController.swift; sourceTree = "<group>"; };
 		6EDA7A261E918005008A19B1 /* NewDrinkViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewDrinkViewController.swift; sourceTree = "<group>"; };
 		6EDA7A281E918015008A19B1 /* NewFoodViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewFoodViewController.swift; sourceTree = "<group>"; };
 		6EDA7A2A1E9195AA008A19B1 /* MenuItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 			isa = PBXGroup;
 			children = (
 				6EE85F621E6DBB2B0034DB23 /* KitchenOrderListController.swift */,
+				6ECDCB8E1E954EF400BAA69C /* KitchenViewController.swift */,
 			);
 			name = Kitchen;
 			sourceTree = "<group>";
@@ -373,6 +376,7 @@
 				6E0CD3981E54D01500FDD435 /* HostSeatingController.swift in Sources */,
 				6E0CD3851E52008C00FDD435 /* WaitingViewController.swift in Sources */,
 				6E0CD39A1E54D04400FDD435 /* CustomTableViewController.swift in Sources */,
+				6ECDCB8F1E954EF400BAA69C /* KitchenViewController.swift in Sources */,
 				6EDA7A2B1E9195AA008A19B1 /* MenuItem.swift in Sources */,
 				6E8326681E6DBE4500AC59C5 /* NewReservationController.swift in Sources */,
 				6E0CD36B1E50DC8F00FDD435 /* LoginViewController.swift in Sources */,

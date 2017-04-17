@@ -31,7 +31,6 @@ class KitchenOrderListController: CustomTableViewController {
         
         tableView.register(CustomTableCell.self, forCellReuseIdentifier: "cell")
         
-        
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
 
         fetchOrders()
@@ -45,8 +44,6 @@ class KitchenOrderListController: CustomTableViewController {
         }
         dismiss(animated: true, completion: nil)
     }
-    
-    
     
     func initOrderStructs() {
         
@@ -77,6 +74,7 @@ class KitchenOrderListController: CustomTableViewController {
                 
                 if thisOrderStatus.key != "OrderList" {
                     
+                    print(thisOrderStatus.key)
                     if let stringArray = (thisOrderStatus.value as! [String]?) {
                         
                         switch thisOrderStatus.key {
@@ -150,12 +148,9 @@ class KitchenOrderListController: CustomTableViewController {
                 toArray?.append(temp!)
             }
             
-            
             ref.child("Orders").child(from.key).setValue(fromArray)
             ref.child("Orders").child(to.key).setValue(toArray)
         }
-        
-        
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -170,26 +165,87 @@ class KitchenOrderListController: CustomTableViewController {
             
             switch indexPath.section{
                 case 0://Ready
-                    print("Nothing")
+                    
+                    let changeStatusAlert = UIAlertController(title: "Change Order Status", message: "Select the Order's new status.", preferredStyle: UIAlertControllerStyle.alert)
+                    
+                    changeStatusAlert.addAction(UIAlertAction(title: "See Kitchen", style: .default, handler: { (action: UIAlertAction!) in
+                        self.moveSelectedOrder(at: indexPath, from: ready, to: seeKitchen)
+                    }))
+                    
+                    changeStatusAlert.addAction(UIAlertAction(title: "In Progress", style: .default, handler: { (action: UIAlertAction!) in
+                        self.moveSelectedOrder(at: indexPath, from: ready, to: inProgress)
+                    }))
+                    
+                    changeStatusAlert.addAction(UIAlertAction(title: "Placed", style: .default, handler: { (action: UIAlertAction!) in
+                        self.moveSelectedOrder(at: indexPath, from: ready, to: placed)
+                    }))
+                
+                    self.present(changeStatusAlert, animated: true, completion: nil)
                 case 1://See Kitchen
-                    self.moveSelectedOrder(at: indexPath, from: seeKitchen, to: ready)
-                case 2:
-                    self.moveSelectedOrder(at: indexPath, from: inProgress, to: seeKitchen)
-                case 3:
-                    self.moveSelectedOrder(at: indexPath, from: placed, to: inProgress)
+                    let changeStatusAlert = UIAlertController(title: "Change Order Status", message: "Select the Order's new status.", preferredStyle: UIAlertControllerStyle.alert)
+                    
+                    changeStatusAlert.addAction(UIAlertAction(title: "Ready", style: .default, handler: { (action: UIAlertAction!) in
+                        self.moveSelectedOrder(at: indexPath, from: seeKitchen, to: ready)
+                    }))
+                    
+                    changeStatusAlert.addAction(UIAlertAction(title: "In Progress", style: .default, handler: { (action: UIAlertAction!) in
+                        self.moveSelectedOrder(at: indexPath, from: seeKitchen, to: inProgress)
+                    }))
+                    
+                    changeStatusAlert.addAction(UIAlertAction(title: "Placed", style: .default, handler: { (action: UIAlertAction!) in
+                        self.moveSelectedOrder(at: indexPath, from: seeKitchen, to: placed)
+                    }))
+                
+                    self.present(changeStatusAlert, animated: true, completion: nil)
+                case 2://In Progress
+                    let changeStatusAlert = UIAlertController(title: "Change Order Status", message: "Select the Order's new status.", preferredStyle: UIAlertControllerStyle.alert)
+                    
+                    changeStatusAlert.addAction(UIAlertAction(title: "Ready", style: .default, handler: { (action: UIAlertAction!) in
+                        self.moveSelectedOrder(at: indexPath, from: inProgress, to: ready)
+                    }))
+                    
+                    changeStatusAlert.addAction(UIAlertAction(title: "See Kitchen", style: .default, handler: { (action: UIAlertAction!) in
+                        self.moveSelectedOrder(at: indexPath, from: inProgress, to: seeKitchen)
+                    }))
+                    
+                    changeStatusAlert.addAction(UIAlertAction(title: "Placed", style: .default, handler: { (action: UIAlertAction!) in
+                        self.moveSelectedOrder(at: indexPath, from: inProgress, to: placed)
+                    }))
+                
+                    self.present(changeStatusAlert, animated: true, completion: nil)
+                case 3://Placed
+                    let changeStatusAlert = UIAlertController(title: "Change Order Status", message: "Select the Order's new status.", preferredStyle: UIAlertControllerStyle.alert)
+                    
+                    changeStatusAlert.addAction(UIAlertAction(title: "Ready", style: .default, handler: { (action: UIAlertAction!) in
+                        self.moveSelectedOrder(at: indexPath, from: placed, to: ready)
+                    }))
+                    
+                    changeStatusAlert.addAction(UIAlertAction(title: "See Kitchen", style: .default, handler: { (action: UIAlertAction!) in
+                        self.moveSelectedOrder(at: indexPath, from: placed, to: seeKitchen)
+                    }))
+                    
+                    changeStatusAlert.addAction(UIAlertAction(title: "In Progress", style: .default, handler: { (action: UIAlertAction!) in
+                        self.moveSelectedOrder(at: indexPath, from: placed, to: inProgress)
+                    }))
+                
+                    self.present(changeStatusAlert, animated: true, completion: nil)
             default:
                 print("None of those")
             }
             
+            tableView.cellForRow(at: indexPath)?.isSelected = false
         })
-        
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> CustomTableCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
         
+        cell.detailTextLabel?.text = orderArray[indexPath.section].orders[indexPath.row].tableKey
+        cell.backgroundColor = CustomColor.black
         cell.textLabel?.text = orderArray[indexPath.section].orders[indexPath.row].item
-        cell.setColors()
+        cell.textLabel?.textColor = CustomColor.UCFGold
+        cell.detailTextLabel?.textColor = CustomColor.white
+        
         return cell
     }
     

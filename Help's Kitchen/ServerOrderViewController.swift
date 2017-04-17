@@ -19,6 +19,8 @@ class ServerOrderViewController: CustomTableViewController {
         var orders: [Order]!
     }
     
+    var serverTables: [String]?
+    
     var placedOrders = OrderStatus()
     var inProgressOrders = OrderStatus()
     var readyOrders = OrderStatus()
@@ -36,6 +38,7 @@ class ServerOrderViewController: CustomTableViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
 
         // Do any additional setup after loading the view.
+        fetchServerTables()
         fetchOrders()
     }
     
@@ -46,6 +49,17 @@ class ServerOrderViewController: CustomTableViewController {
             print(logoutError)
         }
         dismiss(animated: true, completion: nil)
+    }
+    
+    func fetchServerTables() {
+            
+        ref.child("Users").child("Server").child((FIRAuth.auth()?.currentUser?.uid)!).child("assignedTables").observe(.value, with: { (snapshot) in
+                
+            if let tables = snapshot.value as! [String]? {
+                self.serverTables = tables
+            }
+                
+        })
     }
     
     func initOrderStructs() {
@@ -118,11 +132,17 @@ class ServerOrderViewController: CustomTableViewController {
             
             if key != "" {
                 
-                if let dict = orderListSnapshot.childSnapshot(forPath: key).value as! [String : AnyObject]? {
-                    let order = Order()
+                if let tableKey = orderListSnapshot.childSnapshot(forPath: key).childSnapshot(forPath: "tableKey").value as? String {
                     
-                    order.setValuesForKeys(dict)
-                    orders.append(order)
+                    if key != "" && (serverTables?.contains(tableKey))!{
+                        
+                        if let dict = orderListSnapshot.childSnapshot(forPath: key).value as! [String : AnyObject]? {
+                            let order = Order()
+                            
+                            order.setValuesForKeys(dict)
+                            orders.append(order)
+                        }
+                    }
                 }
             }
         }

@@ -19,3 +19,5 @@ class Table: NSObject{
     var newStatus: String?
     
 }
+
+

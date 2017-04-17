@@ -31,7 +31,7 @@ class NewDrinkViewController: CustomTableViewController {
         
         tableView.register(CustomTableCell.self, forCellReuseIdentifier: "cell")
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(handleCancel))
 
         // Do any additional setup after loading the view.
         

@@ -43,6 +43,12 @@ class TableInfoViewController: CustomTableViewController {
         fetchTableOrders()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        fetchTableOrders()
+    }
+    
     func initOrderArrays(){
         orderArray = [OrderStatus]()
     
@@ -60,7 +66,7 @@ class TableInfoViewController: CustomTableViewController {
     
     func fetchTableOrders() {
         
-        ref.child("Orders").observe(.value, with: { (snapshot) in
+        ref.child("Orders").observeSingleEvent(of: .value, with: { (snapshot) in
             
             self.initOrderArrays()
             
@@ -71,7 +77,17 @@ class TableInfoViewController: CustomTableViewController {
                 
                 if thisOrderStatus.key != "OrderList" {
                     
-                    if let stringArray = (thisOrderStatus.value as! [String]?) {
+                    if let keyArray = (thisOrderStatus.value as! [AnyObject]?) {
+                        
+                        var stringArray = [String]()
+                        
+                        for key in keyArray {
+                            if let str = key as? String{
+                                stringArray.append(str)
+                            }else if let num = key as? Int{
+                                stringArray.append(String(describing: num))
+                            }
+                        }
                         
                         switch thisOrderStatus.key {
                         case "Placed":
@@ -110,13 +126,19 @@ class TableInfoViewController: CustomTableViewController {
         
         for key in keyArray{
             
-            if key != "" && (selectedTable?.orders?.contains(key))! {
+            if key != "" {
                 
-                if let dict = orderListSnapshot.childSnapshot(forPath: key).value as! [String : AnyObject]? {
-                    let order = Order()
+                if let tableKey = orderListSnapshot.childSnapshot(forPath: key).childSnapshot(forPath: "tableKey").value as? String {
                     
-                    order.setValuesForKeys(dict)
-                    orders.append(order)
+                    if key != "" && selectedTable?.key == tableKey {
+                        
+                        if let dict = orderListSnapshot.childSnapshot(forPath: String( describing:key)).value as! [String : AnyObject]? {
+                            let order = Order()
+                            
+                            order.setValuesForKeys(dict)
+                            orders.append(order)
+                        }
+                    }
                 }
             }
         }
@@ -132,9 +154,7 @@ class TableInfoViewController: CustomTableViewController {
         let orderController = NewOrderViewController()
         orderController.selectedTable = self.selectedTable
         
-        present(orderController, animated: true, completion: {
-            self.fetchTableOrders()
-        })
+        present(orderController, animated: true, completion: nil)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> CustomTableCell {

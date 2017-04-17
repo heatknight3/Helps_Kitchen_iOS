@@ -103,16 +103,23 @@ class ServerTableController: CustomTableViewController {
                     
                     if let dict = thisTable.value as? [String : AnyObject] {
                         
+                        if let capacityInt = dict["capacity"] as? Int?{
+                            table.capacity = capacityInt
+                        }else if let capacityString = dict["capacity"] as? String?{
+                            table.capacity = Int(capacityString!)
+                        }else {
+                            table.capacity = 0
+                        }
+                        
                         table.name = dict["name"] as! String?
                         table.key = (eachTable as!FIRDataSnapshot).key
                         table.status = dict["status"] as! String?
-                        table.capacity = dict["capacity"] as! Int?
                         table.reservationName = dict["reservationName"] as! String?
                         table.orders = dict["Orders"] as! [String]?
                         
-                        if(table.status == "seated"){
+                        if(table.status == "Seated"){
                             self.tableArray[0].tables.append(table)
-                        }else if table.status == "available"{
+                        }else if table.status == "Available"{
                             self.tableArray[1].tables.append(table)
                         }
                     }

@@ -53,7 +53,7 @@ class NewReservationController: UIViewController, UIPickerViewDelegate, UIPicker
         //tf.layer.borderWidth = 10
         //tf.layer.borderColor = CustomColor.Grey850.cgColor
         
-        tf.attributedPlaceholder = NSAttributedString(string: "Enter Name:",
+        tf.attributedPlaceholder = NSAttributedString(string: "Enter Name",
                                                               attributes: [NSForegroundColorAttributeName: CustomColor.UCFGoldTrans75])
         return tf
     }()
@@ -121,6 +121,15 @@ class NewReservationController: UIViewController, UIPickerViewDelegate, UIPicker
         dismiss(animated: true, completion: nil)
     }
     
+    func toMilliseconds(str: String) -> String{
+        var temp = str
+        
+        temp = temp.replacingOccurrences(of: ".", with: "")
+        temp = temp.substring(to: temp.index(temp.startIndex, offsetBy: 12))
+        
+        return temp
+    }
+    
     func handleCreate() {
         
         var currentReservations: [String]?
@@ -157,7 +166,11 @@ class NewReservationController: UIViewController, UIPickerViewDelegate, UIPicker
                 
                 let partySize = self.pickedPartySize!
                 
-                self.ref.child("Reservations").child(self.nameTextField.text!).updateChildValues(["dateTime": dateTime, "partySize": partySize, "name":self.nameTextField.text!],withCompletionBlock: {(err, ref) in
+                var resKey = String(NSDate.init().timeIntervalSince1970)
+                
+                resKey = self.toMilliseconds(str: resKey)
+                
+                self.ref.child("Reservations").child(resKey).updateChildValues(["dateTime": dateTime, "partySize": partySize, "name":self.nameTextField.text!],withCompletionBlock: {(err, ref) in
                     
                     if err != nil {
                         print(err!)
@@ -277,7 +290,7 @@ class NewReservationController: UIViewController, UIPickerViewDelegate, UIPicker
     
     internal func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         
-        let rowString = NSAttributedString(string: String(partySizeArray[row]), attributes: [NSForegroundColorAttributeName : CustomColor.Yellow500])
+        let rowString = NSAttributedString(string: String(partySizeArray[row]), attributes: [NSForegroundColorAttributeName : CustomColor.UCFGold])
         
         return rowString
     }

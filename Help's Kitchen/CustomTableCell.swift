@@ -22,14 +22,13 @@ class CustomTableCell: UITableViewCell {
     }
     
     func setColors() {
-        self.textLabel?.textColor = CustomColor.Yellow500
+        self.textLabel?.textColor = CustomColor.UCFGold
         self.backgroundColor = UIColor.black
         self.textLabel?.alpha = 1
     }
     
     func setGreen() {
-        
-        
+
         self.textLabel?.textColor = CustomColor.green
         self.backgroundColor = UIColor.black
         
@@ -42,9 +41,6 @@ class CustomTableCell: UITableViewCell {
             self.textLabel?.textColor = CustomColor.UCFGold
             self.textLabel?.alpha = 1
         })
-        
-        
-        
     }
     
     func flashColor() {

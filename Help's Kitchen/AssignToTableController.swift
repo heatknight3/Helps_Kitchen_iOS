@@ -35,33 +35,32 @@ class AssignToTableController: CustomTableViewController {
     
     func fetchSeatingQueue() {
         
-        ref.child("ReservationQueue").observe(.value, with: { (snapshot) in
+        try ref.child("ReservationQueue").observe(.value, with: { (snapshot) in
+            self.reservations = [Reservation]()
+            
             print(snapshot)
             self.reservationIds = ((snapshot.value) as! [String])
-            print(self.reservationIds)
             
-        })
-        ref.child("Reservations").observeSingleEvent(of: .value, with: { (snapshot) in
-            
-            for eachRes in snapshot.children {
+            for eachId in self.reservationIds {
                 
-                let thisRes = eachRes as! FIRDataSnapshot
-                
-                if (self.reservationIds.contains(thisRes.key)){
+                if eachId != ""{
                     
-                    if let dict = thisRes.value as? [String: AnyObject] {
-                        
-                        let tempReservation = Reservation()
-                        
-                        tempReservation.name = dict["name"] as? String
-                        tempReservation.partySize = dict["partySize"] as! NSNumber?
-                        
-                        self.reservations.append(tempReservation)
-                    }
+                    self.ref.child("Reservations").child(eachId).observeSingleEvent(of: .value, with: { (snapshot) in
+                        if let dict = snapshot.value as? [String: AnyObject] {
+                            
+                            let tempReservation = Reservation()
+                            
+                            tempReservation.name = dict["name"] as? String
+                            tempReservation.partySize = dict["partySize"] as! Int?
+                            
+                            self.reservations.append(tempReservation)
+                            
+                            DispatchQueue.main.async {
+                                self.tableView.reloadData()
+                            }
+                        }
+                    })
                 }
-            }
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
             }
         })
     }
@@ -84,16 +83,44 @@ class AssignToTableController: CustomTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedRes = reservations[indexPath.row]
         
-        //add to table
+        if selectedRes.partySize! <= (selectedTable?.capacity)!{
+            
+            //add to table
         ref.child("Tables").child((selectedTable?.key)!).child("reservationName").setValue(reservations[indexPath.row].name)
-        
-        //change table status
-        ref.child("Tables").child((selectedTable?.key)!).child("status").setValue("seated")
-        ref.child("Tables").child((selectedTable?.key)!).child("newStatus").setValue("false")
-        
-        //remove from seatingQueue
-        removeUserFromQueue(index: indexPath.row)
+            
+            //change table status
+            ref.child("Tables").child((selectedTable?.key)!).child("status").setValue("seated")
+            ref.child("Tables").child((selectedTable?.key)!).child("newStatus").setValue("false")
+            
+            //remove from seatingQueue
+            removeUserFromQueue(index: indexPath.row)
+        }else{
+            let refreshAlert = UIAlertController(title: "Party Too Big!", message: "Do you want to seat them here anyway?", preferredStyle: UIAlertControllerStyle.alert)
+            
+            refreshAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action: UIAlertAction!) in
+                
+                //add to table
+                self.ref.child("Tables").child((self.selectedTable?.key)!).child("reservationName").setValue(self.reservations[indexPath.row].name)
+                
+                //change table status
+                self.ref.child("Tables").child((self.selectedTable?.key)!).child("status").setValue("seated")
+                self.ref.child("Tables").child((self.selectedTable?.key)!).child("newStatus").setValue("false")
+                
+                //remove from seatingQueue
+                self.removeUserFromQueue(index: indexPath.row)
+            }))
+            
+            refreshAlert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { (action: UIAlertAction!) in
+                print("Handle Cancel Logic here")
+                
+            }))
+            
+            self.present(refreshAlert, animated: true, completion: nil)
+            
+            tableView.cellForRow(at: indexPath)?.isSelected = false
+        }
     }
     
     func removeUserFromQueue(index: Int){

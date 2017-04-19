@@ -185,6 +185,22 @@ class HostSeatingController: CustomTableViewController {
         cell.textLabel?.textColor = CustomColor.UCFGold
         cell.detailTextLabel?.textColor = CustomColor.white
         
+        if (tableArray[indexPath.section].tables[indexPath.row].newStatus == "true")
+        {
+            cell.textLabel?.textColor = CustomColor.green
+            cell.backgroundColor = UIColor.black
+            
+            cell.textLabel?.alpha = 1
+            UIView.animate(withDuration: 0.7, delay: 0.0, options: [.repeat, .autoreverse, ], animations:
+                {
+                    UIView.setAnimationRepeatCount(5)
+                    cell.textLabel?.alpha = 0
+            }, completion: { (finished: Bool) in
+                cell.textLabel?.textColor = CustomColor.UCFGold
+                cell.textLabel?.alpha = 1
+            })
+            
+        }
         return cell
     }
     

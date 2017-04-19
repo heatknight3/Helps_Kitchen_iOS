@@ -147,7 +147,10 @@ class ServerTableController: CustomTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if closePressed {
-        ref.child("Tables").child(tableArray[indexPath.section].tables[indexPath.row].key!).child("status").setValue("available")
+        ref.child("Tables").child(tableArray[indexPath.section].tables[indexPath.row].key!).child("status").setValue("Available")
+        ref.child("Tables").child(tableArray[indexPath.section].tables[indexPath.row].key!).child("newStatus").setValue("true")
+            
+            
             
         }else {
             let tableInfoController = TableInfoViewController()

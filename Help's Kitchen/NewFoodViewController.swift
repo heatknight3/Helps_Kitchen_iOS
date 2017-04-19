@@ -161,7 +161,7 @@ class NewFoodViewController: CustomTableViewController {
                 
                 refreshAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action: UIAlertAction!) in
 
-                    self.ref.child("Orders").child("OrderList").child(orderKey).setValue(["item":self.foodArray[indexPath.section].items[indexPath.row].name, "tableKey":(self.selectedTable?.key)!])
+                    self.ref.child("Orders").child("OrderList").child(orderKey).setValue(["item":self.foodArray[indexPath.section].items[indexPath.row].name, "tableKey":(self.selectedTable?.key)!, "newStatus":"true"])
                     
                     self.ref.child("Orders").child("Placed").setValue(orderKeys)
                     
